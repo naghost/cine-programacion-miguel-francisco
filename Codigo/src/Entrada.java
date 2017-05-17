@@ -1,45 +1,12 @@
-/*******************************************************************************
- * 2017, All rights reserved.
- *******************************************************************************/
 
-// Start of user code (user defined imports)
-
-// End of user code
-
-/**
- * Description of Entrada.
- * 
- * @author Migue
- */
 public class Entrada {
-	/**
-	 * Description of the property IDSocio.
-	 */
+
 	public Integer IDSocio = Integer.valueOf(0);
-
-	/**
-	 * Description of the property IDPago.
-	 */
 	public Integer IDPago = Integer.valueOf(0);
-
-	/**
-	 * Description of the property Precio.
-	 */
-	public EDouble Precio = null;
-
-	/**
-	 * Description of the property IDEmpleado.
-	 */
+	public Double Precio = null;
 	public Integer IDEmpleado = Integer.valueOf(0);
+	public Integer sesions = new Integer(0);
 
-	/**
-	 * Description of the property sesions.
-	 */
-	public HashSet<Sesion> sesions = new HashSet<Sesion>();
-
-	/**
-	 * Description of the property empleados.
-	 */
 	public HashSet<Empleado> empleados = new HashSet<Empleado>();
 
 	/**
