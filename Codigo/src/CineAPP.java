@@ -5,7 +5,7 @@ public class CineAPP {
 	public static void main(String[] args) throws ClassNotFoundException {
 		// TODO Auto-generated method stub
 		
-		VControlAcceso iniciar = new VControlAcceso();
+		VAdministrador iniciar = new VAdministrador();
 		iniciar.setVisible(true);
 		
 	
