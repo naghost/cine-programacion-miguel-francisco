@@ -92,6 +92,7 @@ public class VAdministrador extends JFrame {
 
 	/**
 	 * Launch the application.
+	 * @param bd 
 	 */
 	/*public static void main(String[] args) {
 
@@ -99,7 +100,7 @@ public class VAdministrador extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VAdministrador() {
+	public VAdministrador(BBDD bd) {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(340, 100, 680, 579);
@@ -126,7 +127,7 @@ public class VAdministrador extends JFrame {
 		}
 		
 		//Panel 1 de las Peliculas
-		Peliculas(pestana);
+		Peliculas(pestana, bd);
 
 		//Panel 2 de las Salas
 		Salas(pestana);
@@ -293,8 +294,6 @@ public class VAdministrador extends JFrame {
 
 
 
-
-
 	private void Socios(JTabbedPane pestana) {
 		JPanel panelSocios = new JPanel();
 		 pestana.addTab("Socios", null, panelSocios , null);
@@ -423,8 +422,6 @@ public class VAdministrador extends JFrame {
 
 
 
-
-
 	private void Pagos(JTabbedPane pestana) {
 		JPanel panelPagos = new JPanel();
 		 pestana.addTab("Pagos", null, panelPagos , null);
@@ -502,8 +499,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 	}});
 	}
-
-
 
 
 
@@ -589,8 +584,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 	}});
 	}
-
-
 
 
 
@@ -709,9 +702,6 @@ public class VAdministrador extends JFrame {
 			 	}});
 	}
 	
-	
-	
-
 
 	private void Descuentos(JTabbedPane pestana, String[] meses, Integer[] anos, JComboBox diaFISesion) {
 		 
@@ -1487,7 +1477,7 @@ public class VAdministrador extends JFrame {
 	}
 
 
-	public void Peliculas(JTabbedPane pestana){
+	public void Peliculas(JTabbedPane pestana, BBDD bd){
 		
 		JPanel panelPeliculas = new JPanel();
 		pestana.addTab("Peliculas", null, panelPeliculas, null);
@@ -1525,7 +1515,7 @@ public class VAdministrador extends JFrame {
 		cBGeneros.addItem("Bélico");
 		cBGeneros.addItem("Ciencia ficción");
 		cBGeneros.addItem("Drama");
-		cBGeneros.addItem("Suspenso");
+		cBGeneros.addItem("Suspense");
 		cBGeneros.addItem("Terror / horror");
 		cBGeneros.addItem("Porno-erótico");
 		
@@ -1549,8 +1539,8 @@ public class VAdministrador extends JFrame {
 		
 		JComboBox mesEstreno = new JComboBox(meses);
 		mesEstreno.addItemListener(new ItemListener() {
+			
 			public void itemStateChanged(ItemEvent arg0) {
-				
 				
 				
 				if(control){
@@ -1652,10 +1642,20 @@ public class VAdministrador extends JFrame {
 		btnAadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+			Pelicula pelicula = new Pelicula();
+			
+				String titulo = textFTituloPelicula.getText();
+				String director = textFDirectorPeliculas.getText();
+				String genero = (String) cBGeneros.getSelectedItem();
+				int dia =  (int) diaEstreno.getSelectedItem();
+				String mes = (String) mesEstreno.getSelectedItem();
+				int ano = (int) anoEstreno.getSelectedItem();
+				String sinopsis = textArea.getText();
 				
-				
-				
+				pelicula.crearPelicula(bd,titulo, director, genero, dia, mes ,ano, sinopsis);
 			}
+
+			
 		});
 		btnAadir.setBounds(271, 170, 89, 23);
 		panelPeliculas.add(btnAadir);
