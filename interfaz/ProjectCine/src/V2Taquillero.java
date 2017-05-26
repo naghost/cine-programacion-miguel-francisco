@@ -22,6 +22,7 @@ public class V2Taquillero extends JFrame {
 	DibSala w;
 	int filas=6, columnas=13;
 	String butacasTex="Butacas: ";
+	String sesion="";
 	//Walk w1= new Walk(10,10,1);
 	
 	ArrayList<Butaca> butacas = new ArrayList<Butaca>();
@@ -29,23 +30,13 @@ public class V2Taquillero extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Prueba2 frame = new Prueba2();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public V2Taquillero(String pelicula) {
+	public V2Taquillero(String sesion, String pelicula, String sala, String hora) {
+		this.sesion=sesion;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(340, 100, 680, 579);
 		contentPane = new JPanel();
@@ -80,16 +71,16 @@ public class V2Taquillero extends JFrame {
 		w.add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblPeliculaLaVilla = new JLabel(pelicula);
-		lblPeliculaLaVilla.setBounds(10, 11, 175, 14);
+		JLabel lblPeliculaLaVilla = new JLabel("Titulo: "+pelicula);
+		lblPeliculaLaVilla.setBounds(10, 11, 300, 14);
 		panel.add(lblPeliculaLaVilla);
 		
-		JLabel lblSala = new JLabel("Sala: 5");
+		JLabel lblSala = new JLabel("Sala: "+sala);
 		lblSala.setBounds(10, 36, 46, 14);
 		panel.add(lblSala);
 		
-		JLabel lblSesin = new JLabel("Sesi\u00F3n: 22/08/2017 22:00");
-		lblSesin.setBounds(10, 61, 150, 14);
+		JLabel lblSesin = new JLabel("Sesi\u00F3n: "+hora);
+		lblSesin.setBounds(10, 61, 300, 14);
 		panel.add(lblSesin);
 		
 		JButton btnSiguiente = new JButton("Aceptar");
@@ -116,8 +107,7 @@ public class V2Taquillero extends JFrame {
 		
 			
 			
-			//contentPane.add(w1);
-			//btnNewButton.setBounds(161, 92, 89, 23);
+			
 			
 			
 			

@@ -1,10 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
@@ -24,11 +28,18 @@ public class V1Taquillero extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
+	private JComboBox diaFFSesion;
+	private JComboBox mesFFSesion;
+	private JComboBox anoFFSesion;
 	private boolean control=true;
 	private DefaultTableModel modelo;
 	private JTable tableEntradas;
 	private JScrollPane scrollPaneTableEntradas;
 	private ArrayList <Sala> datosSala= new ArrayList<Sala>();
+	private String dia="", mes="", ano="";
+	private ControlErrores ce= new ControlErrores();
+
+	private Bbdd bd= new Bbdd();
 
 	/**
 	 * Launch the application.
@@ -48,8 +59,9 @@ public class V1Taquillero extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public V1Taquillero() {
+	public V1Taquillero()  {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(340, 100, 680, 579);
 		contentPane = new JPanel();
@@ -88,24 +100,38 @@ public class V1Taquillero extends JFrame {
 		lblFechaFin.setBounds(381, 27, 53, 14);
 		contentPane.add(lblFechaFin);
 		
-		JComboBox diaFFSesion = new JComboBox();
+		String [] fechaSel= ce.camFormat2(ce.fechaACtual());
+		
+		diaFFSesion = new JComboBox();
 		diaFFSesion.setBounds(444, 24, 46, 20);
 		contentPane.add(diaFFSesion);
 		
+		
 		for(int i=1; i<=31; i++){
 			
+			if(i<10){diaFFSesion.addItem("0"+i);} else {
 			
-			diaFFSesion.addItem(i);
+			diaFFSesion.addItem(""+i);
+			
+			}
 		}
+		
+		diaFFSesion.setSelectedItem(fechaSel[0]);
 		
 		String [] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
 		
-		JComboBox mesFFSesion = new JComboBox(meses);
+		mesFFSesion = new JComboBox(meses);
+		
+		mesFFSesion.setSelectedItem(fechaSel[1]);
+		
+		System.out.println(fechaSel[1]+" Mes seleccionado");
+		
+		
+		
 		mesFFSesion.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				
-				
-				
+							
 				if(control){
 					
 					control=false;
@@ -179,15 +205,28 @@ public class V1Taquillero extends JFrame {
 		
 		mesFFSesion.setBounds(500, 24, 63, 20);
 		contentPane.add(mesFFSesion);
-		mesFFSesion.setSelectedIndex(2);
+		
 		
 		String [] anos = {"2017", "2018", "2019", "2020"};
 		
-		JComboBox anoFFSesion = new JComboBox(anos);
+		anoFFSesion = new JComboBox(anos);
 		anoFFSesion.setBounds(573, 24, 53, 20);
 		contentPane.add(anoFFSesion);
 		
+		anoFFSesion.setSelectedItem(fechaSel[2]);
+		
 		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				
+				
+				
+				datosTabla(textField.getText().toString(),textField_1.getText().toString(),textField_2.getText().toString());
+				
+				
+			}
+		});
 		btnBuscar.setBounds(438, 111, 89, 23);
 		contentPane.add(btnBuscar);
 		
@@ -215,40 +254,19 @@ public class V1Taquillero extends JFrame {
 		 btnCancelar.setBounds(537, 111, 89, 23);
 		 contentPane.add(btnCancelar);
 		 
-		 
-		 //cargamos datos
-		 for(int i=0; i<18; i++){
-			 
-			 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-			 
-			 
-		 }
-		 
+		 datosTabla("", "", "");
 		
-		 for(int i=0; i<datosSala.size(); i++){
-			 
-			 Object [] fila = new Object[5];
-			 
-			 fila[0] = datosSala.get(i).getIdSala();
-			 fila[1] = datosSala.get(i).getFilas();
-			 fila[2] = datosSala.get(i).getColumnas();
-			 fila[3] = datosSala.get(i).getAudio();
-			 fila[4] = datosSala.get(i).getVideo();
-			 
-			 modelo.addRow ( fila );
-			 
-		 }
-		 
-		 
+		 		 
 		 tableEntradas .addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
 			 		
 			 		
 			 		
-			 		System.out.println(tableEntradas .rowAtPoint(arg0.getPoint()));	
 			 		
-			 		V2Taquillero vt= new V2Taquillero("Chapolin Colorado");
+			 		System.out.println(String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),0)));
+			 		
+			 		V2Taquillero vt= new V2Taquillero(String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),0)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),1)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),2)), String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),4))+" "+String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),3)));
 					
 					vt.setVisible(true);
 					
@@ -256,5 +274,88 @@ public class V1Taquillero extends JFrame {
 			 		
 			 		
 			 	}});
+	}
+	
+	
+	public void datosTabla(String pel, String ses, String sala){
+		
+		vaciarTabla();
+		
+		String consulta="SELECT se.IDSesion, pe.Titulo, se.IDPelicula, se.IDSala, se.IDPrecio, se.FechaHora FROM sesiones se INNER JOIN peliculas pe WHERE se.IDPelicula=pe.IDPelicula AND se.FechaHora="+ce.camFormat3(ce.camFormat1(diaFFSesion.getSelectedItem().toString(), mesFFSesion.getSelectedItem().toString(), anoFFSesion.getSelectedItem().toString()));
+		bd.Conexion();
+		
+		if(!pel.equals("")){
+			
+			consulta+="AND pe.Titulo='"+ pel+"'";
+			
+		}
+		
+		if(!ses.equals("")) {
+			
+			consulta+="AND se.IDSesion='"+ ses+"'";
+		}
+		
+		if(!sala.equals("")) {
+			
+			consulta+="AND se.IDSala='"+ sala+"'";
+		}
+		
+		ResultSet contenido= bd.seleccionar(consulta);
+		
+		System.out.println(consulta);
+		
+	try {	
+		
+		contenido.last();
+		
+		if(contenido.getRow()>0) {
+		
+		contenido.first();
+		
+		do {
+			
+			 
+			 Object [] fila = new Object[6];
+			 
+			 
+			 
+			 fila[0]=contenido.getString("IDSesion");
+			 fila[1] = contenido.getString("Titulo");
+			 fila[2] = contenido.getString("IDSala"); 
+			 
+			 //fila[3] = contenido.getString("Fecha-hora");
+			 String fechHor [] =  contenido.getString("FechaHora").split(" ");
+			 String [] fecha = fechHor[0].split("-");
+			 String hora = fechHor[1].substring(0, 5);
+			 fila[3] = fecha[2]+"/"+fecha[1]+"/"+fecha[0];
+			 fila[4] = hora;
+			 fila[5] = contenido.getString("IDPrecio");
+			 
+			 
+			 
+			 modelo.addRow ( fila );
+			 
+			
+		 }while(contenido.next()); }} 
+	
+			catch(Exception e){
+			 
+			 System.out.println("Error");
+		 }
+		
+				
+	}
+	
+	public void vaciarTabla(){
+		
+		for(int i=modelo.getRowCount()-1; i>=0; i--) {
+			
+			modelo.removeRow(i);
+			
+			
+		}
+		
+		
+		
 	}
 }

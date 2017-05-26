@@ -21,6 +21,7 @@ public class ControlErrores {
 		//Compara dos fechas y dice cuantos dias meses y años hay entre una y otra.
 		//Comprueba dirección de correo solo gmail.com y hotmail.com
 		//Devuelve el numero de dias de un mes dependiendo del año
+		
 	}
 	
 	//Comprueba si el string introducido es un Entero	
@@ -600,6 +601,196 @@ public class ControlErrores {
 			
 			return dias;
 		}
+		
+		
+		//Devuelve el día de la semana
+		public int DiasSemana(int dia, int mes,int ano){
+			
+			int D=26, M=8, A=1984, A1=84, a=0, b=0, c=0, d=0, e=0;
+			
+			A1=ano%100;
+			A=ano;
+			M=mes;
+			D=dia;
+			
+			if(A>1699 && A<1800) {
+				
+				a=5;
+			}else if(A>1799 && A<1900) {
+				a=3;
+				
+			}else if(A>1899 && A<2000) {
+				
+				a=1;
+				
+			}else if(A>1999 && A<2100) {
+				a=0;
+				
+			}else if(A>2099 && A<2200) {
+				
+				a=-2;
+			}else if(A>2199 && A<2300) {
+				
+				a=-4;
+				
+			}
+			
+			
+			b=A1+(A1/4);
+			
+			
+			boolean bisiesto=false;
+			
+			if((A%4)==0){
+				
+				if((A%100)==0){
+					
+					
+					if((A%400)==0){
+						
+						//Es numero bisiesto
+						bisiesto=true;
+					}else {
+						
+						//No es numero bisiesto
+						bisiesto=false;
+					}
+					
+				}else {
+					
+					//Es numero bisiesto
+					bisiesto=true;
+				}
+				
+			}else {
+				//No es bisiesto
+				bisiesto=false;
+			}
+			
+			if(bisiesto && (M==1||M==2)){
+				
+				
+				c=-1;
+				
+			}else {
+				
+				c=0;
+				
+			}
+			
+			
+			switch(M){
+			
+			case 1:
+				d=6;
+				break;
+			case 2:
+				d=2;
+				break;
+			case 3:
+				d=2;
+				break;
+			case 4:
+				d=5;
+				break;
+			case 5:
+				d=0;
+				break;
+			case 6:
+				d=3;
+				break;
+			case 7:
+				d=5;
+				break;
+			case 8:
+				d=1;
+				break;
+			case 9:
+				d=4;
+				break;
+			case 10:
+				d=6;
+				break;
+			case 11:
+				d=2;
+				break;
+			case 12:
+				d=4;
+				break;
+			}
+			
+			
+			
+			e=D;
+			
+			a=a+b+c+d+e;
+			
+			while (a>7){
+				
+				a=a-7;
+				
+			}
+			
+			return a;
+			
+		}
+		
+		//Cambio de formato por ejemplo de 01Ene2017 a 01/01/2017
+		public String camFormat1 (String diaIn, String mesIn, String anoIn) {
+
+			int mes=0;
+			String fechaOu="";
+
+			String[] meses ={"Ene", "Feb", "Mar", "Abri", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+
+			for(int i=0; i<meses.length; i++) {
+
+				if(mesIn.equals(meses[i])){
+
+					mes=i+1;
+					
+				}
+
+			}
+			
+			if(mes<10) {fechaOu=diaIn+"/0"+mes+"/"+anoIn;} else {fechaOu=diaIn+"/"+mes+"/"+anoIn;}
+			
+			return fechaOu;
+
+		}
+
+
+
+		//Cambio de formato por ejemplo de 01/01/2017 a 01Ene2017
+		public String[] camFormat2 (String fechaIn) {
+
+			int mes;
+			String [] fechaOu=  fechaIn.split("/");
+
+			String[] meses ={"Ene", "Feb", "Mar", "Abri", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+
+			fechaOu[1]= meses[Integer.parseInt(fechaOu[1])-1];
+			
+			return fechaOu;
+
+		}
+
+		//Cambio de formato por ejemplo de 01/02/2017 a 20170201
+		public String camFormat3 (String fechaIn) {
+
+			String fechaOu;
+
+			String [] div = fechaIn.split("/");
+			
+			fechaOu=div[2]+""+div[1]+""+div[0];
+			
+			return fechaOu;
+
+		}
+		
+		
+		
+		
 		
 		
 		
