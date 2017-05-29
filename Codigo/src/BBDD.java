@@ -11,7 +11,7 @@ public class BBDD {
 	String driver ="com.mysql.jdbc.Driver";
 	java.sql.Connection conexion = null;
 	
-	public void conexion() throws ClassNotFoundException{
+	public BBDD() throws ClassNotFoundException{
 		try{
 			Class.forName(driver);
 			this.conexion = DriverManager.getConnection(servidor, user, pass);

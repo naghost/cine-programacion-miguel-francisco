@@ -1,17 +1,21 @@
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
 
 public class Pelicula {
 
-	public Date Estreno = new Date();
+	public String Estreno = new String();
 	public String Titulo = new String();
 	public String Director = new String();
 	public String Genero = new String();
@@ -25,22 +29,16 @@ public class Pelicula {
 		this.Director = director2;
 		this.Genero = genero2;
 		this.Sinopsis = sinopsis2;
-		try {
-			java.sql.PreparedStatement stmt = bd.conexion.prepareStatement("INSERT INTO peliculas(Titulo, Genero, Director, Sinopsis, Estreno) VALUES(?, ?, ?, ?, ?)");
-			stmt.setString(0, this.Titulo);
-			stmt.setString(1, this.Genero);
-			stmt.setString(2, this.Director);
-			stmt.setString(3, this.Sinopsis);
-			stmt.setDate(4, (java.sql.Date) this.Estreno);
-			
-			int count = stmt.executeUpdate();
-			
-			System.out.println("Cambios: "+count);
-			stmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		   try {
+	            String Query = "INSERT INTO peliculas VALUES(null, '"+this.Titulo+"', '"+this.Genero+"','"+this.Director+"','"+this.Sinopsis+"','"+this.Estreno+"'  )";
+	          System.out.println(Query);
+	            java.sql.Statement st = bd.conexion.createStatement();
+	            st.executeUpdate(Query);
+	            JOptionPane.showMessageDialog(null, "Datos almacenados de forma exitosa");
+	        } catch (SQLException ex) {
+	            JOptionPane.showMessageDialog(null, "Error en el almacenamiento de datos");
+	        }
 		
 
 		
@@ -59,7 +57,21 @@ public class Pelicula {
 		// End of user code
 	}
 	
-	private Date Fecha(int dia, String mes, int ano) {
+	public ResultSet verPelicula(BBDD bd){
+		java.sql.Statement stmt;
+		ResultSet rs = null;
+		try {
+			stmt = bd.conexion.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM Peliculas");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	return rs;
+	}
+	
+	private String Fecha(int dia, String mes, int ano) {
 		String auxdia = String.valueOf(dia);
 		String auxano = String.valueOf(ano);
 		String [] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
@@ -74,7 +86,7 @@ public class Pelicula {
 				}
 			}
 		}
-		String fecha = auxdia+"/"+auxmes+"/"+auxano;
+		String fecha = auxano+"/"+auxmes+"/"+auxdia;
 		
 		SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
 		try {
@@ -85,7 +97,7 @@ public class Pelicula {
 		}
 		System.out.println(fecha);
 		System.out.println(auxfecha);
-		return auxfecha;
+		return fecha;
 	}
 	
 }

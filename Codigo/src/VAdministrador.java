@@ -5,6 +5,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -93,6 +95,7 @@ public class VAdministrador extends JFrame {
 	/**
 	 * Launch the application.
 	 * @param bd 
+	 * @throws SQLException 
 	 */
 	/*public static void main(String[] args) {
 
@@ -100,7 +103,7 @@ public class VAdministrador extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VAdministrador(BBDD bd) {
+	public VAdministrador(BBDD bd) throws SQLException {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(340, 100, 680, 579);
@@ -1477,7 +1480,8 @@ public class VAdministrador extends JFrame {
 	}
 
 
-	public void Peliculas(JTabbedPane pestana, BBDD bd){
+	public void Peliculas(JTabbedPane pestana, BBDD bd) throws SQLException{
+		Pelicula pelicula = new Pelicula();
 		
 		JPanel panelPeliculas = new JPanel();
 		pestana.addTab("Peliculas", null, panelPeliculas, null);
@@ -1642,9 +1646,9 @@ public class VAdministrador extends JFrame {
 		btnAadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-			Pelicula pelicula = new Pelicula();
 			
-				String titulo = textFTituloPelicula.geigutText();
+			
+				String titulo = textFTituloPelicula.getText();
 				String director = textFDirectorPeliculas.getText();
 				String genero = (String) cBGeneros.getSelectedItem();
 				int dia =  (int) diaEstreno.getSelectedItem();
@@ -1653,6 +1657,12 @@ public class VAdministrador extends JFrame {
 				String sinopsis = textArea.getText();
 				
 				pelicula.crearPelicula(bd,titulo, director, genero, dia, mes ,ano, sinopsis);
+				try {
+					datosTablaPelicula(bd, pelicula);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 			
@@ -1695,11 +1705,12 @@ public class VAdministrador extends JFrame {
 		
 		modelo = new DefaultTableModel();
 		 tablePeliculas = new JTable(modelo/*data1, columnNames*/);
-		 modelo.addColumn("Id");
-		 modelo.addColumn("Filas");
-		 modelo.addColumn("Columnas");
-		 modelo.addColumn("Audio");
-		 modelo.addColumn("Video");
+		 modelo.addColumn("ID");
+		 modelo.addColumn("Titulo");
+		 modelo.addColumn("Genero");
+		 modelo.addColumn("Director");
+		 modelo.addColumn("Sinopsis");
+		 modelo.addColumn("Estreno");
 		 
 		 tablePeliculas.setPreferredScrollableViewportSize(new Dimension(400, 200));
 		 scrollPaneTablePeliculas= new JScrollPane(tablePeliculas);
@@ -1712,29 +1723,37 @@ public class VAdministrador extends JFrame {
 		 scrollPane.setBounds(381, 157, -133, -78);
 		 panelPeliculas.add(scrollPane);
 		 
+		datosTablaPelicula(bd, pelicula);
 		 
+	}
+
+
+
+
+
+	private void datosTablaPelicula(BBDD bd, Pelicula pelicula) throws SQLException {
+		System.out.println(modelo.getRowCount());
+		for(int i = (modelo.getRowCount()-1); i>=0;i--){
+		modelo.removeRow(i);
+		}
+		ResultSet rs = pelicula.verPelicula(bd);
 		 //cargamos datos
-		 for(int i=0; i<18; i++){
+		 while(rs.next()){
+			 Object [] fila = new Object[6];
 			 
-			 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
+	 				fila[0] = rs.getInt("IDPelicula");
+	 				fila[1] = rs.getString("Titulo");
+	 				fila[2] = rs.getString("Genero");
+	 				fila[3] = rs.getString("Director");
+	 				fila[4] = rs.getString("Sinopsis");
+	 				fila[5] = rs.getDate("Estreno");
+			 
+			 modelo.addRow ( fila );
 			 
 			 
 		 }
 		 
 		
-		 for(int i=0; i<datosSala.size(); i++){
-			 
-			 Object [] fila = new Object[5];
-			 
-			 fila[0] = datosSala.get(i).getIdSala();
-			 fila[1] = datosSala.get(i).getFilas();
-			 fila[2] = datosSala.get(i).getColumnas();
-			 fila[3] = datosSala.get(i).getAudio();
-			 fila[4] = datosSala.get(i).getVideo();
-			 
-			 modelo.addRow ( fila );
-			 
-		 }
 		 
 		 
 		 tablePeliculas.addMouseListener(new MouseAdapter() {
@@ -1747,7 +1766,6 @@ public class VAdministrador extends JFrame {
 			 		
 			 		
 			 	}});
-		 
 	}
 	
 	
