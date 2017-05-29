@@ -1644,7 +1644,7 @@ public class VAdministrador extends JFrame {
 				
 			Pelicula pelicula = new Pelicula();
 			
-				String titulo = textFTituloPelicula.getText();
+				String titulo = textFTituloPelicula.geigutText();
 				String director = textFDirectorPeliculas.getText();
 				String genero = (String) cBGeneros.getSelectedItem();
 				int dia =  (int) diaEstreno.getSelectedItem();

@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -5,6 +6,8 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+
+import com.mysql.jdbc.PreparedStatement;
 
 public class Pelicula {
 
@@ -17,14 +20,29 @@ public class Pelicula {
 	
 	
 	public void crearPelicula(BBDD bd,String titulo2, String director2, String genero2, int dia, String mes, int ano2, String sinopsis2) {
-		
 		this.Estreno = Fecha(dia, mes, ano2);
 		this.Titulo = titulo2;
 		this.Director = director2;
 		this.Genero = genero2;
 		this.Sinopsis = sinopsis2;
+		try {
+			java.sql.PreparedStatement stmt = bd.conexion.prepareStatement("INSERT INTO peliculas(Titulo, Genero, Director, Sinopsis, Estreno) VALUES(?, ?, ?, ?, ?)");
+			stmt.setString(0, this.Titulo);
+			stmt.setString(1, this.Genero);
+			stmt.setString(2, this.Director);
+			stmt.setString(3, this.Sinopsis);
+			stmt.setDate(4, (java.sql.Date) this.Estreno);
+			
+			int count = stmt.executeUpdate();
+			
+			System.out.println("Cambios: "+count);
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-	
+
 		
 		
 	}
