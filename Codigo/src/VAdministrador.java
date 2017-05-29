@@ -91,7 +91,7 @@ public class VAdministrador extends JFrame {
 	private JTextField textField_25;
 	private JTextField textField_26;
 	private ControlErrores ce = new ControlErrores();
-
+	private int idUsed= 0;
 	/**
 	 * Launch the application.
 	 * @param bd 
@@ -1528,11 +1528,11 @@ public class VAdministrador extends JFrame {
 		JLabel lblEstreno = new JLabel("Estreno");
 		lblEstreno.setBounds(24, 90, 46, 14);
 		panelPeliculas.add(lblEstreno);
-		
+
 		JComboBox diaEstreno = new JComboBox();
 		diaEstreno.setBounds(79, 87, 46, 20);
 		panelPeliculas.add(diaEstreno);
-		
+	
 		for(int i=1; i<=31; i++){
 			
 			
@@ -1540,7 +1540,7 @@ public class VAdministrador extends JFrame {
 		}
 		
 		String [] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
-		
+
 		JComboBox mesEstreno = new JComboBox(meses);
 		mesEstreno.addItemListener(new ItemListener() {
 			
@@ -1624,7 +1624,7 @@ public class VAdministrador extends JFrame {
 		JComboBox anoEstreno = new JComboBox(anos);
 		anoEstreno.setBounds(208, 87, 53, 20);
 		panelPeliculas.add(anoEstreno);
-		
+	
 		JLabel lblDirector = new JLabel("Director");
 		lblDirector.setBounds(308, 34, 63, 14);
 		panelPeliculas.add(lblDirector);
@@ -1658,7 +1658,7 @@ public class VAdministrador extends JFrame {
 				
 				pelicula.crearPelicula(bd,titulo, director, genero, dia, mes ,ano, sinopsis);
 				try {
-					datosTablaPelicula(bd, pelicula);
+					datosTablaPelicula(bd, pelicula, cBGeneros, textArea,diaEstreno, anoEstreno, anoEstreno);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1673,6 +1673,26 @@ public class VAdministrador extends JFrame {
 		JButton btnModificar = new JButton("Modificar");
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/*Boton de modificar mostrar datos seleccionados en la tabla en los campos al pulsar
+				 * modificar realizar actualizacion de los datos*/
+					
+					int id = idUsed;
+					String titulo = textFTituloPelicula.getText();
+					String director = textFDirectorPeliculas.getText();
+					String genero = (String) cBGeneros.getSelectedItem();
+					int dia =  (int) diaEstreno.getSelectedItem();
+					String mes = (String) mesEstreno.getSelectedItem();
+					int ano = (int) anoEstreno.getSelectedItem();
+					String sinopsis = textArea.getText();
+					
+					pelicula.modificarPelicula(bd,titulo, director, genero, dia, mes ,ano, sinopsis, id);
+					try {
+						datosTablaPelicula(bd, pelicula, cBGeneros, textArea,diaEstreno, anoEstreno, anoEstreno);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
 			}
 		});
 		btnModificar.setBounds(370, 170, 89, 23);
@@ -1712,6 +1732,10 @@ public class VAdministrador extends JFrame {
 		 modelo.addColumn("Sinopsis");
 		 modelo.addColumn("Estreno");
 		 
+		 tablePeliculas.getColumnModel().getColumn(0).setMaxWidth(0);
+		 tablePeliculas.getColumnModel().getColumn(0).setMinWidth(0);
+		 tablePeliculas.getTableHeader().getColumnModel().getColumn(0).setMinWidth(0);
+		 tablePeliculas.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
 		 tablePeliculas.setPreferredScrollableViewportSize(new Dimension(400, 200));
 		 scrollPaneTablePeliculas= new JScrollPane(tablePeliculas);
 		 scrollPaneTablePeliculas.setBounds(24, 220, 534, 252);
@@ -1723,15 +1747,13 @@ public class VAdministrador extends JFrame {
 		 scrollPane.setBounds(381, 157, -133, -78);
 		 panelPeliculas.add(scrollPane);
 		 
-		datosTablaPelicula(bd, pelicula);
+		datosTablaPelicula(bd, pelicula, cBGeneros, textArea, diaEstreno, mesEstreno, anoEstreno);
 		 
 	}
 
 
 
-
-
-	private void datosTablaPelicula(BBDD bd, Pelicula pelicula) throws SQLException {
+	private void datosTablaPelicula(BBDD bd, Pelicula pelicula,JComboBox cBGeneros, JTextArea textArea, JComboBox diaEstreno, JComboBox mesEstreno, JComboBox anoEstreno) throws SQLException {
 		System.out.println(modelo.getRowCount());
 		for(int i = (modelo.getRowCount()-1); i>=0;i--){
 		modelo.removeRow(i);
@@ -1741,7 +1763,7 @@ public class VAdministrador extends JFrame {
 		 while(rs.next()){
 			 Object [] fila = new Object[6];
 			 
-	 				fila[0] = rs.getInt("IDPelicula");
+			 		fila[0] = rs.getString("IDPelicula");
 	 				fila[1] = rs.getString("Titulo");
 	 				fila[2] = rs.getString("Genero");
 	 				fila[3] = rs.getString("Director");
@@ -1753,18 +1775,42 @@ public class VAdministrador extends JFrame {
 			 
 		 }
 		 
-		
-		 
 		 
 		 tablePeliculas.addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
-			 		
-			 		
-			 		
 			 		System.out.println(tablePeliculas.rowAtPoint(arg0.getPoint()));			 		
 			 		
+			 		idUsed = Integer.parseInt(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 0)));
+			 		textFTituloPelicula.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 1)));
+			 		String combox = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 2));
+			 		for(int i = 0; i<cBGeneros.getItemCount();i++){
+			 			if(combox.equals(cBGeneros.getItemAt(i))){
+			 				
+			 				cBGeneros.setSelectedIndex(i);
+			 			}
+			 		}
+			 		textFDirectorPeliculas.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 3)));
 			 		
+			 		textArea.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 4)));
+			 			
+			 			String Fecha = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 5));
+			 		
+			 				String Fechas[] = Fecha.split("-");
+			 				System.out.println(Fechas[2]+" Fecha 1");
+			 					int dia = Integer.parseInt(Fechas[2])-1;
+			 						diaEstreno.setSelectedIndex(dia);
+			 						System.out.println(dia+"DIA");
+			 					int mes = Integer.parseInt(Fechas[1])-1;
+			 						mesEstreno.setSelectedIndex(mes);
+			 						
+			 					int ano = Integer.parseInt(Fechas[0]);
+			 						Integer [] anos = {2017, 2018, 2019, 2020};
+			 						for(int i = 0;i<anos.length;i++){
+			 							if(anos[i].equals(ano)){
+			 								anoEstreno.setSelectedIndex(i);
+			 							}
+			 						}		 						
 			 	}});
 	}
 	

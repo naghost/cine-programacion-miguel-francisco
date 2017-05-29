@@ -52,9 +52,24 @@ public class Pelicula {
 	}
 
 
-	public void modificarPelicula() {
-		// Start of user code for method modificarPelicula
-		// End of user code
+	public void modificarPelicula(BBDD bd, String titulo2, String director2, String genero2, int dia, String mes, int ano2, String sinopsis2, int id) {
+		this.Estreno = Fecha(dia, mes, ano2);
+		this.Titulo = titulo2;
+		this.Director = director2;
+		this.Genero = genero2;
+		this.Sinopsis = sinopsis2;
+		
+		  try {
+	            String Query = "UPDATE peliculas SET Titulo='"+this.Titulo+"', Genero='"+this.Genero+"', Director='"+this.Director+"', Sinopsis='"+this.Sinopsis+"', Estreno='"+this.Estreno+"' WHERE IDPelicula ="+id;
+	             
+	            java.sql.Statement st = bd.conexion.createStatement();
+	            st.executeUpdate(Query);
+	            JOptionPane.showMessageDialog(null, "Datos almacenados de forma exitosa");
+	        } catch (SQLException ex) {
+	            JOptionPane.showMessageDialog(null, "Error en el almacenamiento de datos");
+	        }
+		
+		
 	}
 	
 	public ResultSet verPelicula(BBDD bd){
