@@ -133,7 +133,7 @@ public class VAdministrador extends JFrame {
 		Peliculas(pestana, bd);
 
 		//Panel 2 de las Salas
-		Salas(pestana);
+		Salas(pestana, bd);
 			 
 		//Panel 3 de Sesiones
 		Sesiones(panelSesiones,pestana, meses, anos);
@@ -258,7 +258,7 @@ public class VAdministrador extends JFrame {
 			 
 			 
 			 
-			 
+			 /*
 			 //cargamos datos
 			 for(int i=0; i<18; i++){
 				 
@@ -281,7 +281,7 @@ public class VAdministrador extends JFrame {
 				 modelo9.addRow ( fila );
 				 
 			 }
-			 
+			 */
 			 
 			 tableEmpleados .addMouseListener(new MouseAdapter() {
 				 	@Override
@@ -289,7 +289,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 		
 				 		
-				 		System.out.println(tableEmpleados .rowAtPoint(arg0.getPoint()));			 		
 				 		
 				 		
 				 	}});
@@ -385,7 +384,7 @@ public class VAdministrador extends JFrame {
 			 panelSocios.add(scrollPaneTableSocios );
 			 
 			 
-			 
+			 /*
 			 
 			 //cargamos datos
 			 for(int i=0; i<18; i++){
@@ -409,7 +408,7 @@ public class VAdministrador extends JFrame {
 				 modelo8.addRow ( fila );
 				 
 			 }
-			 
+			 */
 			 
 			 tableSocios .addMouseListener(new MouseAdapter() {
 				 	@Override
@@ -417,7 +416,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 		
 				 		
-				 		System.out.println(tableSocios .rowAtPoint(arg0.getPoint()));			 		
 				 		
 				 		
 				 	}});
@@ -465,7 +463,7 @@ public class VAdministrador extends JFrame {
 			 panelPagos.add(scrollPaneTablePagos );
 			 
 			 
-			 
+			 /*
 			 
 			 //cargamos datos
 			 for(int i=0; i<18; i++){
@@ -489,7 +487,7 @@ public class VAdministrador extends JFrame {
 				 modelo7.addRow ( fila );
 				 
 			 }
-			 
+			 */
 			 
 			 tablePagos .addMouseListener(new MouseAdapter() {
 				 	@Override
@@ -497,7 +495,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 		
 				 		
-				 		System.out.println(tablePagos .rowAtPoint(arg0.getPoint()));			 		
 				 		
 				 		
 				 	}});
@@ -551,7 +548,7 @@ public class VAdministrador extends JFrame {
 			 
 			 
 			 
-			 
+			 /*
 			 //cargamos datos
 			 for(int i=0; i<18; i++){
 				 
@@ -575,14 +572,13 @@ public class VAdministrador extends JFrame {
 				 
 			 }
 			 
-			 
+			 */
 			 tableEntradas .addMouseListener(new MouseAdapter() {
 				 	@Override
 				 	public void mouseClicked(MouseEvent arg0) {
 				 		
 				 		
 				 		
-				 		System.out.println(tableEntradas .rowAtPoint(arg0.getPoint()));			 		
 				 		
 				 		
 				 	}});
@@ -668,7 +664,7 @@ public class VAdministrador extends JFrame {
 		 
 		 
 		 
-		 
+		 /*
 		 //cargamos datos
 		 for(int i=0; i<18; i++){
 			 
@@ -692,14 +688,13 @@ public class VAdministrador extends JFrame {
 			 
 		 }
 		 
-		 
+		 */
 		 tablePrecios .addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
 			 		
 			 		
 			 		
-			 		System.out.println(tablePrecios .rowAtPoint(arg0.getPoint()));			 		
 			 		
 			 		
 			 	}});
@@ -763,7 +758,7 @@ public class VAdministrador extends JFrame {
 					
 					if (control){
 					
-					System.out.println(diaFIDescuentos.getItemCount());
+					
 					
 					//diaEstreno.removeAll();
 					
@@ -851,7 +846,7 @@ public class VAdministrador extends JFrame {
 			mesFFDescuentos.addItemListener(new ItemListener() {
 				public void itemStateChanged(ItemEvent arg0) {
 					
-					System.out.println("final");
+				
 					
 					if(control){
 						
@@ -863,7 +858,6 @@ public class VAdministrador extends JFrame {
 					
 					if (control){
 					
-					System.out.println(diaFFDescuentos.getItemCount());
 					
 					//diaEstreno.removeAll();
 					
@@ -1033,7 +1027,7 @@ public class VAdministrador extends JFrame {
 			 
 			 
 			 
-			 //cargamos datos
+		/*	 //cargamos datos
 			 for(int i=0; i<18; i++){
 				 
 				 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
@@ -1054,7 +1048,7 @@ public class VAdministrador extends JFrame {
 				 
 				 modelo4.addRow ( fila );
 				 
-			 }
+			 }*/
 			 
 			 
 			 tableDescuentos .addMouseListener(new MouseAdapter() {
@@ -1063,7 +1057,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 		
 				 		
-				 		System.out.println(tableDescuentos .rowAtPoint(arg0.getPoint()));			 		
 				 		
 				 		
 				 	}});
@@ -1145,7 +1138,6 @@ public class VAdministrador extends JFrame {
 				
 				if (control){
 				
-				System.out.println(diaFISesion.getItemCount());
 				
 				//diaEstreno.removeAll();
 				
@@ -1233,7 +1225,7 @@ public class VAdministrador extends JFrame {
 		mesFFSesion.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				
-				System.out.println("final");
+		
 				
 				if(control){
 					
@@ -1245,7 +1237,6 @@ public class VAdministrador extends JFrame {
 				
 				if (control){
 				
-				System.out.println(diaFFSesion.getItemCount());
 				
 				//diaEstreno.removeAll();
 				
@@ -1442,14 +1433,7 @@ public class VAdministrador extends JFrame {
 		 
 		 
 		 
-		 //cargamos datos
-		 for(int i=0; i<18; i++){
-			 
-			 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-			 
-			 
-		 }
-		 
+/*
 		
 		 for(int i=0; i<datosSala.size(); i++){
 			 
@@ -1464,7 +1448,7 @@ public class VAdministrador extends JFrame {
 			 modelo3.addRow ( fila );
 			 
 		 }
-		 
+		 */
 		 
 		 tableSesiones .addMouseListener(new MouseAdapter() {
 			 	@Override
@@ -1472,7 +1456,6 @@ public class VAdministrador extends JFrame {
 			 		
 			 		
 			 		
-			 		System.out.println(tableSesiones .rowAtPoint(arg0.getPoint()));			 		
 			 		
 			 		
 			 	}});
@@ -1557,7 +1540,6 @@ public class VAdministrador extends JFrame {
 				
 				if (control){
 				
-				System.out.println(diaEstreno.getItemCount());
 				
 				//diaEstreno.removeAll();
 				
@@ -1752,9 +1734,7 @@ public class VAdministrador extends JFrame {
 	}
 
 
-
 	private void datosTablaPelicula(BBDD bd, Pelicula pelicula,JComboBox cBGeneros, JTextArea textArea, JComboBox diaEstreno, JComboBox mesEstreno, JComboBox anoEstreno) throws SQLException {
-		System.out.println(modelo.getRowCount());
 		for(int i = (modelo.getRowCount()-1); i>=0;i--){
 		modelo.removeRow(i);
 		}
@@ -1779,7 +1759,6 @@ public class VAdministrador extends JFrame {
 		 tablePeliculas.addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
-			 		System.out.println(tablePeliculas.rowAtPoint(arg0.getPoint()));			 		
 			 		
 			 		idUsed = Integer.parseInt(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 0)));
 			 		textFTituloPelicula.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 1)));
@@ -1797,10 +1776,8 @@ public class VAdministrador extends JFrame {
 			 			String Fecha = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 5));
 			 		
 			 				String Fechas[] = Fecha.split("-");
-			 				System.out.println(Fechas[2]+" Fecha 1");
 			 					int dia = Integer.parseInt(Fechas[2])-1;
 			 						diaEstreno.setSelectedIndex(dia);
-			 						System.out.println(dia+"DIA");
 			 					int mes = Integer.parseInt(Fechas[1])-1;
 			 						mesEstreno.setSelectedIndex(mes);
 			 						
@@ -1815,7 +1792,8 @@ public class VAdministrador extends JFrame {
 	}
 	
 	
-	private void Salas(JTabbedPane pestana) {
+	private void Salas(JTabbedPane pestana, BBDD bd) {
+			Sala sala = new Sala();
 		 JPanel panelSalas = new JPanel();
 			pestana.addTab("Salas", null, panelSalas, null);
 			panelSalas.setLayout(null);
@@ -1881,6 +1859,15 @@ public class VAdministrador extends JFrame {
 			JButton btnAadir_1 = new JButton("A\u00F1adir");
 			btnAadir_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					String nombre = textField.getText();
+					int filas = Integer.parseInt(textField_1.getText());
+					int columnas = Integer.parseInt(textField_2.getText());
+					String audio = textField_3.getText();
+					String video = textField_4.getText();
+
+					sala.añadirSala(bd, nombre, filas, columnas, audio, video);
+				
+					
 				}
 			});
 			btnAadir_1.setBounds(285, 239, 89, 23);
@@ -1922,40 +1909,65 @@ public class VAdministrador extends JFrame {
 			 
 			 
 			 
-			 //cargamos datos
-			 for(int i=0; i<18; i++){
+			 datosTablaSalas(sala, bd);
+		
+	}
+
+
+	private void datosTablaSalas(Sala sala, BBDD bd) {
+		
+		for(int i = (modelo2.getRowCount()-1); i>=0;i--){
+		modelo2.removeRow(i);
+		}
+		ResultSet rs = sala.verSalas(bd);
+		 //cargamos datos
+		 try {
+			while(rs.next()){
+				 Object [] fila = new Object[6];
 				 
-				 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-				 
-				 
-			 }
-			 
-			
-			 for(int i=0; i<datosSala.size(); i++){
-				 
-				 Object [] fila = new Object[5];
-				 
-				 fila[0] = datosSala.get(i).getIdSala();
-				 fila[1] = datosSala.get(i).getFilas();
-				 fila[2] = datosSala.get(i).getColumnas();
-				 fila[3] = datosSala.get(i).getAudio();
-				 fila[4] = datosSala.get(i).getVideo();
+				 		fila[0] = rs.getString("IDSalas");
+						fila[1] = rs.getString("Nombre");
+						fila[2] = rs.getString("Filas");
+						fila[3] = rs.getString("Columnas");
+						fila[4] = rs.getString("Audio");
+						fila[5] = rs.getString("Video");
 				 
 				 modelo2.addRow ( fila );
 				 
+				 
 			 }
-			 
-			 
-			 tableSalas .addMouseListener(new MouseAdapter() {
-				 	@Override
-				 	public void mouseClicked(MouseEvent arg0) {
-				 		
-				 		
-				 		
-				 		System.out.println(tableSalas .rowAtPoint(arg0.getPoint()));			 		
-				 		
-				 		
-				 	}});
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
 		
+		 
+		 
+		 tableSalas .addMouseListener(new MouseAdapter() {
+			 	@Override
+			 	public void mouseClicked(MouseEvent arg0) {
+			 		
+			 		
+			 		idUsed = Integer.parseInt(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 0)));
+			 		textFTituloPelicula.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 1)));
+			 		String combox = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 2));
+			
+			 		textFDirectorPeliculas.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 3)));
+			 		
+			 		textArea_1.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 4)));
+			 			
+			 			String Fecha = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 5));
+			 		
+			 				String Fechas[] = Fecha.split("-");
+			 					int dia = Integer.parseInt(Fechas[2])-1;
+			 						diaEstreno.setSelectedIndex(dia);
+			 					int mes = Integer.parseInt(Fechas[1])-1;
+			 						mesEstreno.setSelectedIndex(mes);
+			 						
+			 				
+			 		
+			 		
+			 	}});
 	}
 }

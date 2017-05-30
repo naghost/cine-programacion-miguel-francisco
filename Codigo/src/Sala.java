@@ -1,3 +1,7 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
 
 public class Sala {
 	
@@ -6,78 +10,37 @@ public class Sala {
 	private int columnas =0;
 	private String audio="";
 	private String video ="";
-	
-	
-	
-	
-	public Sala(int idSala, int filas, int columnas, String audio, String video) {
-		super();
-		this.idSala = idSala;
-		this.filas = filas;
-		this.columnas = columnas;
-		this.audio = audio;
-		this.video = video;
-	}
-	/**
-	 * @return the idSala
-	 */
-	public int getIdSala() {
-		return idSala;
-	}
-	/**
-	 * @param idSala the idSala to set
-	 */
-	public void setIdSala(int idSala) {
-		this.idSala = idSala;
-	}
-	/**
-	 * @return the filas
-	 */
-	public int getFilas() {
-		return filas;
-	}
-	/**
-	 * @param filas the filas to set
-	 */
-	public void setFilas(int filas) {
-		this.filas = filas;
-	}
-	/**
-	 * @return the columnas
-	 */
-	public int getColumnas() {
-		return columnas;
-	}
-	/**
-	 * @param columnas the columnas to set
-	 */
-	public void setColumnas(int columnas) {
-		this.columnas = columnas;
-	}
-	/**
-	 * @return the audio
-	 */
-	public String getAudio() {
-		return audio;
-	}
-	/**
-	 * @param audio the audio to set
-	 */
-	public void setAudio(String audio) {
-		this.audio = audio;
-	}
-	/**
-	 * @return the video
-	 */
-	public String getVideo() {
-		return video;
-	}
-	/**
-	 * @param video the video to set
-	 */
-	public void setVideo(String video) {
-		this.video = video;
-	}
+	private String nombre="";
 	
 
+	public void añadirSala(BBDD bd, String nombre, int filas, int columnas, String audio, String video){
+		this.nombre = nombre;
+		this.filas = filas;
+		this.columnas = columnas;
+		this.audio = audio;
+		this.video = video;
+		   try {
+	            String Query = "INSERT INTO salas VALUES(null,'"+this.nombre+"', "+this.filas+", "+this.columnas+",'"+this.audio+"','"+this.video+"')";
+	          System.out.println(Query);
+	            java.sql.Statement st = bd.conexion.createStatement();
+	            st.executeUpdate(Query);
+	            JOptionPane.showMessageDialog(null, "Datos almacenados de forma exitosa");
+	        } catch (SQLException ex) {
+	            JOptionPane.showMessageDialog(null, "Error en el almacenamiento de datos");
+	        }
+	}
+	public ResultSet verSalas(BBDD bd){
+		java.sql.Statement stmt;
+		ResultSet rs = null;
+		try {
+			stmt = bd.conexion.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM Salas");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	return rs;
+	}
+	
 }
