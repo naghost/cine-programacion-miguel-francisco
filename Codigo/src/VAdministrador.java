@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -91,7 +92,8 @@ public class VAdministrador extends JFrame {
 	private JTextField textField_25;
 	private JTextField textField_26;
 	private ControlErrores ce = new ControlErrores();
-	private int idUsed= 0;
+	private Integer idUsed_peliculas = null;
+	private Integer idUsed_salas;
 	/**
 	 * Launch the application.
 	 * @param bd 
@@ -1490,23 +1492,12 @@ public class VAdministrador extends JFrame {
 		
 		cBGeneros.setBounds(78, 59, 183, 20);
 		panelPeliculas.add(cBGeneros);
-		cBGeneros.addItem("Documental");
-		cBGeneros.addItem("Biográfico");
-		cBGeneros.addItem("Histórico");
-		cBGeneros.addItem("Musical");
-		cBGeneros.addItem("Comedia");
-		cBGeneros.addItem("Infantil");
-		cBGeneros.addItem("Western");
-		cBGeneros.addItem("Aventura");
-		cBGeneros.addItem("Accion");
-		cBGeneros.addItem("Bélico");
-		cBGeneros.addItem("Ciencia ficción");
-		cBGeneros.addItem("Drama");
-		cBGeneros.addItem("Suspense");
-		cBGeneros.addItem("Terror / horror");
-		cBGeneros.addItem("Porno-erótico");
+	
+		String [] generos = {"Documental", "Biográfico", "Histórico", "Musical", "Comedia", "Infantil", "Western", "Aventura", "Accion", "Bélico", "Ciencia ficción", "Drama", "Suspense","Terror / horror","Porno-erótico" };
+		for(int aux = 0; aux <generos.length;aux++){
+			cBGeneros.addItem(generos[aux]);
+		}
 		
-		//cBGeneros.removeItemAt(0);
 		
 		JLabel lblEstreno = new JLabel("Estreno");
 		lblEstreno.setBounds(24, 90, 46, 14);
@@ -1657,8 +1648,8 @@ public class VAdministrador extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				/*Boton de modificar mostrar datos seleccionados en la tabla en los campos al pulsar
 				 * modificar realizar actualizacion de los datos*/
-					
-					int id = idUsed;
+					if(idUsed_peliculas != null){
+					int id = idUsed_peliculas;
 					String titulo = textFTituloPelicula.getText();
 					String director = textFDirectorPeliculas.getText();
 					String genero = (String) cBGeneros.getSelectedItem();
@@ -1674,7 +1665,7 @@ public class VAdministrador extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-				
+					}else JOptionPane.showMessageDialog(null, "No has seleccionado ningun elemento");
 			}
 		});
 		btnModificar.setBounds(370, 170, 89, 23);
@@ -1683,6 +1674,10 @@ public class VAdministrador extends JFrame {
 		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(idUsed_peliculas!=null){
+					pelicula.borrarPelicula(bd, idUsed_peliculas);
+				}else JOptionPane.showMessageDialog(null, "No has seleccionado ningun elemento");
+				
 			}
 		});
 		btnEliminar.setBounds(469, 170, 89, 23);
@@ -1691,6 +1686,7 @@ public class VAdministrador extends JFrame {
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
 			}
 		});
 		btnBuscar.setBounds(24, 170, 89, 23);
@@ -1760,7 +1756,7 @@ public class VAdministrador extends JFrame {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
 			 		
-			 		idUsed = Integer.parseInt(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 0)));
+			 		idUsed_peliculas = Integer.parseInt(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 0)));
 			 		textFTituloPelicula.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 1)));
 			 		String combox = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 2));
 			 		for(int i = 0; i<cBGeneros.getItemCount();i++){
@@ -1776,10 +1772,12 @@ public class VAdministrador extends JFrame {
 			 			String Fecha = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 5));
 			 		
 			 				String Fechas[] = Fecha.split("-");
+			 				int mes = (Integer.parseInt(Fechas[1])-1);
+	 						mesEstreno.setSelectedIndex(mes);
+	 						
 			 					int dia = Integer.parseInt(Fechas[2])-1;
 			 						diaEstreno.setSelectedIndex(dia);
-			 					int mes = Integer.parseInt(Fechas[1])-1;
-			 						mesEstreno.setSelectedIndex(mes);
+			 					
 			 						
 			 					int ano = Integer.parseInt(Fechas[0]);
 			 						Integer [] anos = {2017, 2018, 2019, 2020};
@@ -1893,12 +1891,17 @@ public class VAdministrador extends JFrame {
 			
 			modelo2 = new DefaultTableModel();
 			 tableSalas = new JTable(modelo2/*data1, columnNames*/);
-			 modelo2.addColumn("Id");
+			 modelo2.addColumn("ID Sala");
+			 modelo2.addColumn("Nombre");
 			 modelo2.addColumn("Filas");
 			 modelo2.addColumn("Columnas");
 			 modelo2.addColumn("Audio");
 			 modelo2.addColumn("Video");
 			 
+			 tableSalas.getColumnModel().getColumn(0).setMaxWidth(0);
+			 tableSalas.getColumnModel().getColumn(0).setMinWidth(0);
+			 tableSalas.getTableHeader().getColumnModel().getColumn(0).setMinWidth(0);
+			 tableSalas.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
 			 tableSalas .setPreferredScrollableViewportSize(new Dimension(400, 200));
 			 scrollPaneTableSalas = new JScrollPane(tableSalas );
 			 scrollPaneTableSalas .setBounds(23, 270, 549, 202);
@@ -1909,12 +1912,12 @@ public class VAdministrador extends JFrame {
 			 
 			 
 			 
-			 datosTablaSalas(sala, bd);
+			 datosTablaSalas(sala, bd,textField,textField_1,textField_2,textField_3,textField_4);
 		
 	}
 
 
-	private void datosTablaSalas(Sala sala, BBDD bd) {
+	private void datosTablaSalas(Sala sala, BBDD bd, JTextField textField, JTextField textField_110, JTextField textField_27, JTextField textField_32, JTextField textField_42) {
 		
 		for(int i = (modelo2.getRowCount()-1); i>=0;i--){
 		modelo2.removeRow(i);
@@ -1949,24 +1952,12 @@ public class VAdministrador extends JFrame {
 			 	public void mouseClicked(MouseEvent arg0) {
 			 		
 			 		
-			 		idUsed = Integer.parseInt(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 0)));
-			 		textFTituloPelicula.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 1)));
-			 		String combox = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 2));
-			
-			 		textFDirectorPeliculas.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 3)));
-			 		
-			 		textArea_1.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 4)));
-			 			
-			 			String Fecha = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 5));
-			 		
-			 				String Fechas[] = Fecha.split("-");
-			 					int dia = Integer.parseInt(Fechas[2])-1;
-			 						diaEstreno.setSelectedIndex(dia);
-			 					int mes = Integer.parseInt(Fechas[1])-1;
-			 						mesEstreno.setSelectedIndex(mes);
-			 						
-			 				
-			 		
+			 		idUsed_salas = Integer.parseInt(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 0)));
+			 		textField.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 1)));
+			 		textField_1.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 2)));
+			 		textField_2.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 3)));
+			 		textField_3.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 4)));
+			 		textField_4.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 5)));
 			 		
 			 	}});
 	}

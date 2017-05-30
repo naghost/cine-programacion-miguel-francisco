@@ -1,3 +1,4 @@
+import java.awt.HeadlessException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -21,7 +22,7 @@ public class Pelicula {
 	public String Genero = new String();
 	public String Sinopsis = new String();
 	public Integer ano = new Integer(0);
-	
+	public String [] campos = {"IDPelicula","Titulo","Genero", "Director", "Sinopsis","Estreno"};
 	
 	public void crearPelicula(BBDD bd,String titulo2, String director2, String genero2, int dia, String mes, int ano2, String sinopsis2) {
 		this.Estreno = Fecha(dia, mes, ano2);
@@ -46,11 +47,24 @@ public class Pelicula {
 	}
 
 
-	public void borrarPelicula() {
-		// Start of user code for method borrarPelicula
-		// End of user code
+	public void borrarPelicula(BBDD bd, Integer idUsed_peliculas) {
+		java.sql.Statement stmt;
+		ResultSet rs = null;
+		try {
+			stmt = bd.conexion.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM peliculas WHERE IDPelicula="+idUsed_peliculas);
+			while(rs.next()){
+				for(int i = 0; i<this.campos.length;i++){
+					System.out.println(rs.getString(this.campos[i]));
+				}
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
-
 
 	public void modificarPelicula(BBDD bd, String titulo2, String director2, String genero2, int dia, String mes, int ano2, String sinopsis2, int id) {
 		this.Estreno = Fecha(dia, mes, ano2);
@@ -77,7 +91,7 @@ public class Pelicula {
 		ResultSet rs = null;
 		try {
 			stmt = bd.conexion.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM Peliculas");
+			rs = stmt.executeQuery("SELECT * FROM peliculas");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
