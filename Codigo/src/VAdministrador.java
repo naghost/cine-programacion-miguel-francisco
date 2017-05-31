@@ -100,6 +100,7 @@ public class VAdministrador extends JFrame {
 	private ControlErrores ce = new ControlErrores();
 	private Integer idUsed_peliculas = null;
 	private Integer idUsed_salas = null;
+	private Integer idUsed_precio = null;
 	private JCalendar calendar;
 	/**
 	 * Launch the application.
@@ -146,7 +147,7 @@ public class VAdministrador extends JFrame {
 		panelSesiones.add(dateChooser_1);
 				
 		//Panel 5 de Precios
-		Precios(pestana);
+		Precios(pestana, bd);
 		
 		//Panel 6 de Entradas
 		 Entradas(pestana);
@@ -595,7 +596,8 @@ public class VAdministrador extends JFrame {
 
 
 
-	private void Precios(JTabbedPane pestana) {
+	private void Precios(JTabbedPane pestana, BBDD bd) {
+		Precios precio = new Precios();
 		JPanel panelPrecios = new JPanel();
 		 pestana.addTab("Precios", null, panelPrecios , null);
 		 panelPrecios .setLayout(null);
@@ -621,6 +623,7 @@ public class VAdministrador extends JFrame {
 		 JButton btnBuscar_5 = new JButton("Buscar");
 		 btnBuscar_5.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
+		 	
 		 	}
 		 });
 		 btnBuscar_5.setBounds(25, 120, 89, 23);
@@ -634,6 +637,18 @@ public class VAdministrador extends JFrame {
 		 JButton btnAadir_3 = new JButton("A\u00F1adir");
 		 btnAadir_3.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
+		 		String nombre = textField_10.getText();
+		 		String aux = textField_16.getText().replace(',', '.');
+		 		double precio2 = Double.parseDouble(aux);
+		 		precio.crearPrecio(bd, nombre, precio2);
+		 		
+		 		 try {
+		 			datosTablaPrecios(bd, precio);
+		 		} catch (SQLException e1) {
+		 			// TODO Auto-generated catch block
+		 			e1.printStackTrace();
+		 		}
+		 		
 		 	}
 		 });
 		 btnAadir_3.setBounds(269, 120, 89, 23);
@@ -642,6 +657,22 @@ public class VAdministrador extends JFrame {
 		 JButton btnModificar_4 = new JButton("Modificar");
 		 btnModificar_4.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
+		 		if(idUsed_precio != null){
+		 			String nombre = textField_10.getText();
+		 			String aux = textField_16.getText().replace(',', '.');;
+		 			double precio2 = Double.parseDouble(aux);
+		 			precio.modificarPrecio(bd,idUsed_precio,nombre,precio2);
+		 			
+		 			 try {
+				 			datosTablaPrecios(bd, precio);
+				 		} catch (SQLException e1) {
+				 			// TODO Auto-generated catch block
+				 			e1.printStackTrace();
+				 		}
+		 			
+		 		}else JOptionPane.showMessageDialog(null, "No has seleccionado ningun elemento");
+		 			
+		 		
 		 	}
 		 });
 		 btnModificar_4.setBounds(368, 120, 89, 23);
@@ -650,6 +681,16 @@ public class VAdministrador extends JFrame {
 		 JButton btnEliminar_4 = new JButton("Eliminar");
 		 btnEliminar_4.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
+		 		
+		 		if(idUsed_precio!=null){
+					precio.eliminarPrecio(bd, idUsed_precio);
+					 try {
+				 			datosTablaPrecios(bd, precio);
+				 		} catch (SQLException e1) {
+				 			// TODO Auto-generated catch block
+				 			e1.printStackTrace();
+				 		}
+				}else JOptionPane.showMessageDialog(null, "No has seleccionado ningun elemento");
 		 	}
 		 });
 		 btnEliminar_4.setBounds(467, 120, 89, 23);
@@ -657,13 +698,16 @@ public class VAdministrador extends JFrame {
 		 
 		 
 		 modelo6 = new DefaultTableModel();
-		 tablePrecios = new JTable(modelo6/*data1, columnNames*/);
-		 modelo6.addColumn("Id");
-		 modelo6.addColumn("Filas");
-		 modelo6.addColumn("Columnas");
-		 modelo6.addColumn("Audio");
-		 modelo6.addColumn("Video");
+		 tablePrecios = new JTable(modelo6);
+		 modelo6.addColumn("ID");
+		 modelo6.addColumn("Nombre");
+		 modelo6.addColumn("Precio");
 		 
+		 
+		 tablePrecios.getColumnModel().getColumn(0).setMaxWidth(0);
+		 tablePrecios.getColumnModel().getColumn(0).setMinWidth(0);
+		 tablePrecios.getTableHeader().getColumnModel().getColumn(0).setMinWidth(0);
+		 tablePrecios.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
 		 tablePrecios .setPreferredScrollableViewportSize(new Dimension(400, 200));
 		 scrollPaneTablePrecios = new JScrollPane(tablePrecios );
 		 scrollPaneTablePrecios.setBounds(25, 164, 531, 321);
@@ -673,38 +717,48 @@ public class VAdministrador extends JFrame {
 		 
 		 
 		 
-		 /*
-		 //cargamos datos
-		 for(int i=0; i<18; i++){
-			 
-			 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-			 
-			 
-		 }
-		 
+
+		 try {
+			datosTablaPrecios(bd, precio);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+
+
+
+
+	private void datosTablaPrecios(BBDD bd, Precios precio) throws SQLException {
 		
-		 for(int i=0; i<datosSala.size(); i++){
+		for(int i = (modelo6.getRowCount()-1); i>=0;i--){
+		modelo6.removeRow(i);
+		}
+		ResultSet rs = precio.verPrecios(bd);
+		 //cargamos datos
+		 while(rs.next()){
+			 Object [] fila = new Object[4];
 			 
-			 Object [] fila = new Object[5];
-			 
-			 fila[0] = datosSala.get(i).getIdSala();
-			 fila[1] = datosSala.get(i).getFilas();
-			 fila[2] = datosSala.get(i).getColumnas();
-			 fila[3] = datosSala.get(i).getAudio();
-			 fila[4] = datosSala.get(i).getVideo();
+			 		fila[0] = rs.getString("IDPrecio");
+	 				fila[1] = rs.getString("Nombre");
+	 				fila[2] = rs.getString("Precio");
+	 				
 			 
 			 modelo6.addRow ( fila );
 			 
+			 
 		 }
-		 
-		 */
-		 tablePrecios .addMouseListener(new MouseAdapter() {
+		
+		
+		
+		tablePrecios.addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
-			 		
-			 		
-			 		
-			 		
+			 		idUsed_precio = Integer.parseInt(String.valueOf(modelo6.getValueAt(tablePrecios.rowAtPoint(arg0.getPoint()), 0)));
+			 		textField_10.setText(String.valueOf(modelo6.getValueAt(tablePrecios.rowAtPoint(arg0.getPoint()), 1)));
+			 		textField_16.setText(String.valueOf(modelo6.getValueAt(tablePrecios.rowAtPoint(arg0.getPoint()), 2)));
+
 			 		
 			 	}});
 	}

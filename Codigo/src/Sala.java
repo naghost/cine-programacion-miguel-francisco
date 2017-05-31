@@ -54,7 +54,7 @@ public class Sala {
 		}
 	return rs;
 	}
-	
+
 	public void borrarSala(BBDD bd, int idUsed_sala) {
 		java.sql.Statement stmt;
 		ResultSet rs = null;
