@@ -7,7 +7,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -23,8 +25,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JCalendar;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class VAdministrador extends JFrame {
 
@@ -94,6 +100,7 @@ public class VAdministrador extends JFrame {
 	private ControlErrores ce = new ControlErrores();
 	private Integer idUsed_peliculas = null;
 	private Integer idUsed_salas;
+	private JCalendar calendar;
 	/**
 	 * Launch the application.
 	 * @param bd 
@@ -117,19 +124,9 @@ public class VAdministrador extends JFrame {
 		setContentPane(contentPane);
 		JTabbedPane pestana = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(pestana, BorderLayout.CENTER);
-		String [] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
-		Integer [] anos = {2017, 2018, 2019, 2020};
+		
 		JPanel panelSesiones = new JPanel();
 		
-		JComboBox diaFISesion = new JComboBox();
-		diaFISesion.setBounds(380, 31, 46, 20);
-		panelSesiones.add(diaFISesion);
-		
-		for(int i=1; i<=31; i++){
-			
-			
-			diaFISesion.addItem(i);
-		}
 		
 		//Panel 1 de las Peliculas
 		Peliculas(pestana, bd);
@@ -138,10 +135,7 @@ public class VAdministrador extends JFrame {
 		Salas(pestana, bd);
 			 
 		//Panel 3 de Sesiones
-		Sesiones(panelSesiones,pestana, meses, anos);
-		
-		//Panel 4 de  Descuentos
-		Descuentos(pestana, meses, anos, diaFISesion);
+		Sesiones(panelSesiones,pestana);
 				
 		//Panel 5 de Precios
 		Precios(pestana);
@@ -168,7 +162,12 @@ public class VAdministrador extends JFrame {
 		JPanel panelEmpleados = new JPanel();
 		 pestana.addTab("Empleados", null, panelEmpleados , null);
 		 panelEmpleados.setLayout(null);
-		 
+		 calendar = new JCalendar();
+		 calendar.setBounds(10, 10, 10, 10);
+		 panelEmpleados.add(calendar);
+		 calendar.setTodayButtonVisible(true);
+		 calendar.setTodayButtonText("Hoy Día");
+		 calendar.setNullDateButtonVisible(true);
 		 JLabel lblNombre_4 = new JLabel("Nombre");
 		 lblNombre_4.setBounds(22, 25, 46, 14);
 		 panelEmpleados.add(lblNombre_4);
@@ -1066,7 +1065,7 @@ public class VAdministrador extends JFrame {
 	}
 
 
-	private void Sesiones(JPanel panelSesiones, JTabbedPane pestana, String[] meses, Integer[] anos) {
+	private void Sesiones(JPanel panelSesiones, JTabbedPane pestana) {
 		 
 		pestana.addTab("Sesiones", null, panelSesiones, null);
 		panelSesiones.setLayout(null);
@@ -1110,202 +1109,13 @@ public class VAdministrador extends JFrame {
 		JLabel lblFechaIncio = new JLabel("Fecha Inicio");
 		lblFechaIncio.setBounds(302, 34, 68, 14);
 		panelSesiones.add(lblFechaIncio);
-		
-		
-		JComboBox diaFISesion = new JComboBox();
-		diaFISesion.setBounds(380, 31, 46, 20);
-		panelSesiones.add(diaFISesion);
-		
-		for(int i=1; i<=31; i++){
-			
-			
-			diaFISesion.addItem(i);
-		}
-		
-		
-		
-		JComboBox mesFISesion = new JComboBox(meses);
-		mesFISesion.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				
-				
-				
-				if(control){
-					
-					control=false;
-				} else {
-					
-					control=true;
-				}
-				
-				if (control){
-				
-				
-				//diaEstreno.removeAll();
-				
-				if(arg0.getItem().equals("Feb")){
-					
-					
-					if(diaFISesion.getItemCount()==31) {
-						
-						diaFISesion.removeItemAt(30);
-						diaFISesion.removeItemAt(29);
-						
-					}
-					
-					if(diaFISesion.getItemCount()==30) { 
-						
-						diaFISesion.removeItemAt(29);
-					}
-					
-					
-				} else {
-					
-					if( arg0.getItem().equals("Ene") || arg0.getItem().equals("Mar") || arg0.getItem().equals("May") || arg0.getItem().equals("Jul") || arg0.getItem().equals("Ago") || arg0.getItem().equals("Oct") || arg0.getItem().equals("Dic")){
-						diaFISesion.setSelectedItem(31);
-					
-					if(diaFISesion.getItemCount()==29){
-						
-						diaFISesion.addItem("30");
-						diaFISesion.addItem("31");
-					} 
-					
-					if (diaFISesion.getItemCount()==30){
-						
-						diaFISesion.addItem("31");
-					}
-					
-					
-					
-					} else {
-						
-						if(diaFISesion.getItemCount()==29){
-							
-							diaFISesion.addItem("30");
-							
-						} 
-						
-						if (diaFISesion.getItemCount()==31){
-							
-							diaFISesion.removeItemAt(30);
-						}
-						
-						
-					}
-				}}
-			}
-		});
-		
-		
-		mesFISesion.setBounds(436, 31, 63, 20);
-		panelSesiones.add(mesFISesion);
-		mesFISesion.setSelectedIndex(2);
-		
-		
-		
-		JComboBox anoFISesion = new JComboBox(anos);
-		anoFISesion.setBounds(509, 31, 53, 20);
-		panelSesiones.add(anoFISesion);
+
 		
 		JLabel lblFechaFin = new JLabel("Fecha Fin");
 		lblFechaFin.setBounds(302, 78, 53, 14);
 		panelSesiones.add(lblFechaFin);
 		
-		JComboBox diaFFSesion = new JComboBox();
-		diaFFSesion.setBounds(380, 75, 46, 20);
-		panelSesiones.add(diaFFSesion);
-		
-		for(int i=1; i<=31; i++){
-			
-			
-			diaFFSesion.addItem(i);
-		}
-		
-		
-		
-		JComboBox mesFFSesion = new JComboBox(meses);
-		mesFFSesion.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				
-		
-				
-				if(control){
-					
-					control=false;
-				} else {
-					
-					control=true;
-				}
-				
-				if (control){
-				
-				
-				//diaEstreno.removeAll();
-				
-				if(arg0.getItem().equals("Feb")){
-					
-					
-					if(diaFFSesion.getItemCount()==31) {
-						
-						diaFFSesion.removeItemAt(30);
-						diaFFSesion.removeItemAt(29);
-						
-					}
-					
-					if(diaFFSesion.getItemCount()==30) { 
-						
-						diaFFSesion.removeItemAt(29);
-					}
-					
-					
-				} else {
-					
-					if( arg0.getItem().equals("Ene") || arg0.getItem().equals("Mar") || arg0.getItem().equals("May") || arg0.getItem().equals("Jul") || arg0.getItem().equals("Ago") || arg0.getItem().equals("Oct") || arg0.getItem().equals("Dic")){
-						diaFFSesion.setSelectedItem(31);
-					
-					if(diaFFSesion.getItemCount()==29){
-						
-						diaFFSesion.addItem("30");
-						diaFFSesion.addItem("31");
-					} 
-					
-					if (diaFFSesion.getItemCount()==30){
-						
-						diaFFSesion.addItem("31");
-					}
-					
-					
-					
-					} else {
-						
-						if(diaFFSesion.getItemCount()==29){
-							
-							diaFFSesion.addItem("30");
-							
-						} 
-						
-						if (diaFFSesion.getItemCount()==31){
-							
-							diaFFSesion.removeItemAt(30);
-						}
-						
-						
-					}
-				}}
-			}
-		});
-		
-		
-		mesFFSesion.setBounds(436, 75, 63, 20);
-		panelSesiones.add(mesFFSesion);
-		mesFFSesion.setSelectedIndex(2);
-		
-		
-		
-		JComboBox anoFFSesion = new JComboBox(anos);
-		anoFFSesion.setBounds(509, 75, 53, 20);
-		panelSesiones.add(anoFFSesion);
-		
+
 		JRadioButton rdbtnL = new JRadioButton("L");
 		rdbtnL.setBounds(302, 117, 36, 23);
 		panelSesiones.add(rdbtnL);
@@ -1497,107 +1307,10 @@ public class VAdministrador extends JFrame {
 		for(int aux = 0; aux <generos.length;aux++){
 			cBGeneros.addItem(generos[aux]);
 		}
-		
-		
-		JLabel lblEstreno = new JLabel("Estreno");
-		lblEstreno.setBounds(24, 90, 46, 14);
-		panelPeliculas.add(lblEstreno);
-
-		JComboBox diaEstreno = new JComboBox();
-		diaEstreno.setBounds(79, 87, 46, 20);
-		panelPeliculas.add(diaEstreno);
 	
-		for(int i=1; i<=31; i++){
-			
-			
-			diaEstreno.addItem(i);
-		}
-		
-		String [] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
-
-		JComboBox mesEstreno = new JComboBox(meses);
-		mesEstreno.addItemListener(new ItemListener() {
-			
-			public void itemStateChanged(ItemEvent arg0) {
-				
-				
-				if(control){
-					
-					control=false;
-				} else {
-					
-					control=true;
-				}
-				
-				if (control){
-				
-				
-				//diaEstreno.removeAll();
-				
-				if(arg0.getItem().equals("Feb")){
-					
-					
-					if(diaEstreno.getItemCount()==31) {
-						
-						diaEstreno.removeItemAt(30);
-						diaEstreno.removeItemAt(29);
-						
-					}
-					
-					if(diaEstreno.getItemCount()==30) { 
-						
-						diaEstreno.removeItemAt(29);
-					}
-					
-					
-				} else {
-					
-					if( arg0.getItem().equals("Ene") || arg0.getItem().equals("Mar") || arg0.getItem().equals("May") || arg0.getItem().equals("Jul") || arg0.getItem().equals("Ago") || arg0.getItem().equals("Oct") || arg0.getItem().equals("Dic")){
-					diaEstreno.setSelectedItem(31);
-					
-					if(diaEstreno.getItemCount()==29){
-						
-						diaEstreno.addItem("30");
-						diaEstreno.addItem("31");
-					} 
-					
-					if (diaEstreno.getItemCount()==30){
-						
-						diaEstreno.addItem("31");
-					}
-					
-					
-					
-					} else {
-						
-						if(diaEstreno.getItemCount()==29){
-							
-							diaEstreno.addItem("30");
-							
-						} 
-						
-						if (diaEstreno.getItemCount()==31){
-							
-							diaEstreno.removeItemAt(30);
-						}
-						
-						
-					}
-				}}
-			}
-		});
 		
 		
-		mesEstreno.setBounds(135, 87, 63, 20);
-		panelPeliculas.add(mesEstreno);
-		mesEstreno.setSelectedIndex(2);
 		
-		
-		Integer [] anos = {2017, 2018, 2019, 2020};
-		JComboBox anoEstreno = new JComboBox(anos);
-		anoEstreno.setBounds(208, 87, 53, 20);
-		panelPeliculas.add(anoEstreno);
-	
 		JLabel lblDirector = new JLabel("Director");
 		lblDirector.setBounds(308, 34, 63, 14);
 		panelPeliculas.add(lblDirector);
@@ -1615,6 +1328,14 @@ public class VAdministrador extends JFrame {
 		textArea.setBounds(381, 57, 164, 102);
 		panelPeliculas.add(textArea);
 		
+		/*Fechas*/
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(78, 90, 183, 20);
+		panelPeliculas.add(dateChooser);
+		
+		JLabel lblEsteno = new JLabel("Esteno");
+		lblEsteno.setBounds(24, 96, 46, 14);
+		panelPeliculas.add(lblEsteno);
 		JButton btnAadir = new JButton("A\u00F1adir");
 		btnAadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1624,14 +1345,12 @@ public class VAdministrador extends JFrame {
 				String titulo = textFTituloPelicula.getText();
 				String director = textFDirectorPeliculas.getText();
 				String genero = (String) cBGeneros.getSelectedItem();
-				int dia =  (int) diaEstreno.getSelectedItem();
-				String mes = (String) mesEstreno.getSelectedItem();
-				int ano = (int) anoEstreno.getSelectedItem();
+				Date estreno = dateChooser.getDate();
 				String sinopsis = textArea.getText();
 				
-				pelicula.crearPelicula(bd,titulo, director, genero, dia, mes ,ano, sinopsis);
+				pelicula.crearPelicula(bd,titulo, director, genero, sinopsis,estreno);
 				try {
-					datosTablaPelicula(bd, pelicula, cBGeneros, textArea,diaEstreno, anoEstreno, anoEstreno);
+					datosTablaPelicula(bd, pelicula, cBGeneros, textArea, dateChooser);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1653,14 +1372,12 @@ public class VAdministrador extends JFrame {
 					String titulo = textFTituloPelicula.getText();
 					String director = textFDirectorPeliculas.getText();
 					String genero = (String) cBGeneros.getSelectedItem();
-					int dia =  (int) diaEstreno.getSelectedItem();
-					String mes = (String) mesEstreno.getSelectedItem();
-					int ano = (int) anoEstreno.getSelectedItem();
 					String sinopsis = textArea.getText();
+					Date estreno = dateChooser.getDate();
 					
-					pelicula.modificarPelicula(bd,titulo, director, genero, dia, mes ,ano, sinopsis, id);
+					pelicula.modificarPelicula(bd,titulo, director, genero,  sinopsis, id,estreno);
 					try {
-						datosTablaPelicula(bd, pelicula, cBGeneros, textArea,diaEstreno, anoEstreno, anoEstreno);
+						datosTablaPelicula(bd, pelicula, cBGeneros, textArea, dateChooser);
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -1676,6 +1393,12 @@ public class VAdministrador extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(idUsed_peliculas!=null){
 					pelicula.borrarPelicula(bd, idUsed_peliculas);
+					try {
+						datosTablaPelicula(bd, pelicula, cBGeneros, textArea, dateChooser);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}else JOptionPane.showMessageDialog(null, "No has seleccionado ningun elemento");
 				
 			}
@@ -1725,12 +1448,14 @@ public class VAdministrador extends JFrame {
 		 scrollPane.setBounds(381, 157, -133, -78);
 		 panelPeliculas.add(scrollPane);
 		 
-		datosTablaPelicula(bd, pelicula, cBGeneros, textArea, diaEstreno, mesEstreno, anoEstreno);
+		datosTablaPelicula(bd, pelicula, cBGeneros, textArea, dateChooser);
+		
+		
 		 
 	}
 
 
-	private void datosTablaPelicula(BBDD bd, Pelicula pelicula,JComboBox cBGeneros, JTextArea textArea, JComboBox diaEstreno, JComboBox mesEstreno, JComboBox anoEstreno) throws SQLException {
+	private void datosTablaPelicula(BBDD bd, Pelicula pelicula,JComboBox cBGeneros, JTextArea textArea, JDateChooser dateChooser ) throws SQLException {
 		for(int i = (modelo.getRowCount()-1); i>=0;i--){
 		modelo.removeRow(i);
 		}
@@ -1768,24 +1493,18 @@ public class VAdministrador extends JFrame {
 			 		textFDirectorPeliculas.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 3)));
 			 		
 			 		textArea.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 4)));
+			 		String aux = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 5));
+			 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+			 		Date fechapelicula = null;
+					try {
+						fechapelicula = sdf.parse(aux);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			 		dateChooser.setDate(fechapelicula);
 			 			
-			 			String Fecha = String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 5));
-			 		
-			 				String Fechas[] = Fecha.split("-");
-			 				int mes = (Integer.parseInt(Fechas[1])-1);
-	 						mesEstreno.setSelectedIndex(mes);
-	 						
-			 					int dia = Integer.parseInt(Fechas[2])-1;
-			 						diaEstreno.setSelectedIndex(dia);
-			 					
-			 						
-			 					int ano = Integer.parseInt(Fechas[0]);
-			 						Integer [] anos = {2017, 2018, 2019, 2020};
-			 						for(int i = 0;i<anos.length;i++){
-			 							if(anos[i].equals(ano)){
-			 								anoEstreno.setSelectedIndex(i);
-			 							}
-			 						}		 						
+			 			 						
 			 	}});
 	}
 	

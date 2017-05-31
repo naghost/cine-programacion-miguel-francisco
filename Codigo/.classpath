@@ -4,5 +4,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/Users/Migue/Desktop/proyecto/cine-programacion-miguel-francisco/Librerias/mysql-connector-java-5.1.42-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Migue/Desktop/proyecto/cine-programacion-miguel-francisco/Librerias/joda-time-2.9.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Migue/Desktop/proyecto/cine-programacion-miguel-francisco/Librerias/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Migue/Desktop/proyecto/cine-programacion-miguel-francisco/Librerias/jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Migue/Desktop/proyecto/cine-programacion-miguel-francisco/Librerias/jgoodies-looks-2.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Migue/Desktop/proyecto/cine-programacion-miguel-francisco/Librerias/junit-4.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
