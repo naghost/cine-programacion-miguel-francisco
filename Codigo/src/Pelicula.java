@@ -38,9 +38,9 @@ public class Pelicula {
 	          System.out.println(Query);
 	            java.sql.Statement st = bd.conexion.createStatement();
 	            st.executeUpdate(Query);
-	            JOptionPane.showMessageDialog(null, "Datos almacenados de forma exitosa");
+	            JOptionPane.showMessageDialog(null, "Datos almacenados de forma exitosa","Resultado Operacion",JOptionPane.INFORMATION_MESSAGE);
 	        } catch (SQLException ex) {
-	            JOptionPane.showMessageDialog(null, "Error en el almacenamiento de datos");
+	            JOptionPane.showMessageDialog(null, "Error en el almacenamiento de datos","Resultado Operacion",JOptionPane.ERROR_MESSAGE);
 	        }
 		
 

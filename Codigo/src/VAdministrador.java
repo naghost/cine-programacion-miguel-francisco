@@ -99,7 +99,7 @@ public class VAdministrador extends JFrame {
 	private JTextField textField_26;
 	private ControlErrores ce = new ControlErrores();
 	private Integer idUsed_peliculas = null;
-	private Integer idUsed_salas;
+	private Integer idUsed_salas = null;
 	private JCalendar calendar;
 	/**
 	 * Launch the application.
@@ -136,6 +136,14 @@ public class VAdministrador extends JFrame {
 			 
 		//Panel 3 de Sesiones
 		Sesiones(panelSesiones,pestana);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(384, 78, 203, 22);
+		panelSesiones.add(dateChooser);
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		dateChooser_1.setBounds(384, 34, 203, 22);
+		panelSesiones.add(dateChooser_1);
 				
 		//Panel 5 de Precios
 		Precios(pestana);
@@ -1583,7 +1591,9 @@ public class VAdministrador extends JFrame {
 					String video = textField_4.getText();
 
 					sala.añadirSala(bd, nombre, filas, columnas, audio, video);
-				
+					
+					datosTablaSalas(sala, bd,textField,textField_1,textField_2,textField_3,textField_4);
+
 					
 				}
 			});
@@ -1593,6 +1603,20 @@ public class VAdministrador extends JFrame {
 			JButton btnModificar_1 = new JButton("Modificar");
 			btnModificar_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					if(idUsed_salas!=null){
+						String nombre = textField.getText();
+						int filas = Integer.parseInt(textField_1.getText());
+						int columnas = Integer.parseInt(textField_2.getText());
+						String audio = textField_3.getText();
+						String video = textField_4.getText();
+						
+						sala.modificarSala(bd, nombre, filas, columnas, audio, video, idUsed_salas);
+						
+						datosTablaSalas(sala, bd,textField,textField_1,textField_2,textField_3,textField_4);
+					}
+					else{
+						JOptionPane.showMessageDialog(null, "No has seleccionado ningun elemento");
+					}
 				}
 			});
 			btnModificar_1.setBounds(384, 239, 89, 23);
@@ -1601,6 +1625,13 @@ public class VAdministrador extends JFrame {
 			JButton btnEliminar_1 = new JButton("Eliminar");
 			btnEliminar_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
+					if(idUsed_salas!=null){
+						sala.borrarSala(bd, idUsed_salas);
+						datosTablaSalas(sala, bd,textField,textField_1,textField_2,textField_3,textField_4);
+						
+					}else JOptionPane.showMessageDialog(null, "No has seleccionado ningun elemento");
+			
 				}
 			});
 			btnEliminar_1.setBounds(483, 239, 89, 23);
