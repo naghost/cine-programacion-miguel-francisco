@@ -117,13 +117,56 @@ public class Sesion {
 
 	 }
 
-	private void borrarSesion() {
+	protected void borrarSesion(Integer id, BBDD bd) {
+			
+		
+		java.sql.Statement stmt;
+		ResultSet rs = null;
+		String camp[] = new String[4];
+		
+		try {
+			stmt = bd.conexion.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM sesiones WHERE IDSesion="+id);
+			while(rs.next()){
+				String auxcampo = "Nombre";
+				String tabla = "salas";
+				String campo = "IDSalas";
+				int id2 = rs.getInt("IDSala");
+			
+				camp[0] = obtenerNombre(bd,  tabla, campo, id2,  auxcampo);
+				System.out.println(camp[0]+"capurron");
+				auxcampo = "Titulo";
+				tabla = "peliculas";
+ 				campo = "IDPelicula";
+ 				id2 = rs.getInt("IDPelicula");
+				camp[1] = obtenerNombre(bd,  tabla, campo, id2,  auxcampo);
+				System.out.println(camp[1]+"capurron");
+				auxcampo = "Nombre";
+				tabla = "precios";
+ 				campo = "IDPrecio";
+ 				id2 = rs.getInt("IDPrecio");
+				camp[2] = obtenerNombre(bd,  tabla, campo, id2,  auxcampo);
+				System.out.println(camp[2]+"capurron");
+				camp[3] = rs.getString("Fecha-hora");
+		}
+			int respuesta = JOptionPane.showConfirmDialog(null,"¿Estas seguro que quieres borrar el siguiente elemento? \n"+camp[0]+" "+camp[1]+" "+camp[2]+" "+camp[3],"Eliminar sesion",JOptionPane.YES_NO_OPTION);
 
+			if(respuesta == 0){
+				stmt = bd.conexion.createStatement();
+				stmt.execute("DELETE FROM sesiones WHERE IDPrecio="+id);
+				stmt.close();
+				JOptionPane.showMessageDialog(null, "Los cambios se han realizado");
+			}else{
+				JOptionPane.showMessageDialog(null, "No se han realizado los cambios");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
-	private void modificarSesion() {
-
-	}
 
 	protected ResultSet sesion(BBDD bd){
 		java.sql.Statement stmt;
@@ -164,7 +207,6 @@ public class Sesion {
 			while(rs.next()){
 				nombre = rs.getString(auxcampo);
 			}
-			
 			stmt.close();
 			rs.close();
 		} catch (SQLException e) {

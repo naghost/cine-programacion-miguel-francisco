@@ -99,6 +99,7 @@ public class VAdministrador extends JFrame {
 	private Integer idUsed_peliculas = null;
 	private Integer idUsed_salas = null;
 	private Integer idUsed_precio = null;
+	private Integer idUsed_sesion = null;
 	private JCalendar calendar;
 	/**
 	 * Launch the application.
@@ -1282,20 +1283,17 @@ public class VAdministrador extends JFrame {
 		btnInsertar.setBounds(294, 249, 89, 23);
 		panelSesiones.add(btnInsertar);
 		
-		JButton btnModificar_2 = new JButton("Modificar");
-		btnModificar_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnModificar_2.setBounds(393, 249, 89, 23);
-		panelSesiones.add(btnModificar_2);
-		
 		JButton btnEliminar_2 = new JButton("Eliminar");
 		btnEliminar_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				if(idUsed_sesion != null){
+					sesiones.borrarSesion(idUsed_sesion, bd);
+					datosTablaSesiones(panelSesiones, bd, sesiones);
+				}else JOptionPane.showMessageDialog(null, "No has seleccionado una sesion","Resultado Operacion",JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		btnEliminar_2.setBounds(491, 249, 89, 23);
+		btnEliminar_2.setBounds(395, 249, 89, 23);
 		panelSesiones.add(btnEliminar_2);
 		
 		for(int i=0; i<=59; i++){
@@ -1373,12 +1371,9 @@ public class VAdministrador extends JFrame {
 		 tableSesiones .addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
-			 		
-			 		
-			 		textField.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 1)));
-
-			 		
-			 		
+			 					 		
+			 		idUsed_sesion =Integer.parseInt(String.valueOf(modelo3.getValueAt(tableSesiones.rowAtPoint(arg0.getPoint()), 0)));
+				
 			 	}});
 	}
 
