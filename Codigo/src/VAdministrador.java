@@ -1216,7 +1216,7 @@ public class VAdministrador extends JFrame {
 		precioSesion.setBounds(124, 121, 121, 20);
 		panelSesiones.add(precioSesion);
 		
-		ResultSet rs = sesiones.precios(bd);
+		ResultSet rs = sesiones.sesion(bd);
 		try {
 			while(rs.next()){
 			precioSesion.addItem(rs.getString("Nombre"));
@@ -1305,6 +1305,12 @@ public class VAdministrador extends JFrame {
 		}
 		
 		
+		datosTablaSesiones(panelSesiones, bd, sesiones);
+		
+	}
+
+
+	private void datosTablaSesiones(JPanel panelSesiones, BBDD bd, Sesion sesiones) {
 		modelo3 = new DefaultTableModel();
 		 tableSesiones = new JTable(modelo3/*data1, columnNames*/);
 		
@@ -1320,7 +1326,22 @@ public class VAdministrador extends JFrame {
 		 
 		 panelSesiones.add(scrollPaneTableSesiones );
 		 
-		 
+			ResultSet rs = sesiones.verSesiones(bd);
+			 //cargamos datos
+			 while(rs.next()){
+				 Object [] fila = new Object[6];
+				 
+				 		fila[0] = rs.getString("IDPelicula");
+		 				fila[1] = rs.getString("Titulo");
+		 				fila[2] = rs.getString("Genero");
+		 				fila[3] = rs.getString("Director");
+		 				fila[4] = rs.getString("Sinopsis");
+		 				fila[5] = rs.getDate("Estreno");
+				 
+				 modelo.addRow ( fila );
+				 
+				 
+			 }
 		 
 		 
 /*
@@ -1349,7 +1370,6 @@ public class VAdministrador extends JFrame {
 			 		
 			 		
 			 	}});
-		
 	}
 
 

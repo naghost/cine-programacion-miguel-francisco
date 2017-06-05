@@ -23,6 +23,7 @@ public class Sesion {
 
 	public void crearSesion(BBDD bd, int idpelicula2, int idsala2, String precio, Date fechainicio, Date fechafin, boolean l, boolean m, boolean x, boolean j, boolean v, boolean s, boolean d, int hora, int minutos) {
 		do{
+			System.out.println("Entro");
 		fechaCalend.setTime(fechainicio);
 		//obtener dia de la semana con gregorian calendar
 		int dia = obtenerDia();
@@ -31,7 +32,6 @@ public class Sesion {
 		if((dia ==2 && l == true) || (dia ==3 && m == true) || (dia ==4 && x == true) || (dia ==5 && j == true) || (dia ==6 && v == true) || (dia ==7 && v == true) || (dia ==1 && d == true)){
 		 try {
 	            String Query = "INSERT INTO sesiones VALUES(null, "+idsala2+", "+idpelicula2+","+idprecio+",'"+fechai+"'  )";
-	      
 	            java.sql.Statement st = bd.conexion.createStatement();
 	            st.execute(Query);
 	            st.close();
@@ -40,12 +40,11 @@ public class Sesion {
 	            JOptionPane.showMessageDialog(null, "Error en el almacenamiento de datos","Resultado Operacion",JOptionPane.ERROR_MESSAGE);
 	        }
 		}
+		fechainicio = sumarDia(fechainicio);
 		
-		sumarDia(fechainicio);
 		}while(fechainicio.compareTo(fechafin)<0);
 
 	}
-
 	
 	public void crearSesion(BBDD bd, int idpelicula2, int idsala2, String precio, Date fechainicio, Date fechafin, int hora, int minutos) {
 		
@@ -105,7 +104,7 @@ public class Sesion {
 		return diaSemana;
 	}
 
-	 public Date sumarDia(Date fecha){
+	private Date sumarDia(Date fecha){
 
 	      Calendar calendar = Calendar.getInstance();
 
@@ -118,17 +117,18 @@ public class Sesion {
 
 	 }
 
-	 public void borrarSesion() {
+	private void borrarSesion() {
 		// Start of user code for method borrarSesion
 		// End of user code
 	}
 
-
 	public void modificarSesion() {
+
 		// Start of user code for method modificarSesion
 		// End of user code
 	}
-	public ResultSet precios(BBDD bd){
+
+	public ResultSet sesion(BBDD bd){
 		java.sql.Statement stmt;
 		ResultSet rs = null;
 		try {
