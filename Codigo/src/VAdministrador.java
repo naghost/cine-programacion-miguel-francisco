@@ -75,9 +75,7 @@ public class VAdministrador extends JFrame {
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTextField textField_5;
-	private JTextField textField_6;
 	private JTextField textField_7;
-	private JTextField textField_8;
 	private JTextField textField_9;
 
 	private JTextField textField_11;
@@ -136,15 +134,9 @@ public class VAdministrador extends JFrame {
 		Salas(pestana, bd);
 			 
 		//Panel 3 de Sesiones
-		Sesiones(panelSesiones,pestana);
+		Sesiones(panelSesiones,pestana, bd);
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(384, 78, 203, 22);
-		panelSesiones.add(dateChooser);
-		
-		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.setBounds(384, 34, 203, 22);
-		panelSesiones.add(dateChooser_1);
+
 				
 		//Panel 5 de Precios
 		Precios(pestana, bd);
@@ -305,7 +297,6 @@ public class VAdministrador extends JFrame {
 	}
 
 
-
 	private void Socios(JTabbedPane pestana) {
 		JPanel panelSocios = new JPanel();
 		 pestana.addTab("Socios", null, panelSocios , null);
@@ -432,7 +423,6 @@ public class VAdministrador extends JFrame {
 	}
 
 
-
 	private void Pagos(JTabbedPane pestana) {
 		JPanel panelPagos = new JPanel();
 		 pestana.addTab("Pagos", null, panelPagos , null);
@@ -509,7 +499,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 	}});
 	}
-
 
 
 	private void Entradas(JTabbedPane pestana) {
@@ -593,7 +582,6 @@ public class VAdministrador extends JFrame {
 				 		
 				 	}});
 	}
-
 
 
 	private void Precios(JTabbedPane pestana, BBDD bd) {
@@ -725,9 +713,6 @@ public class VAdministrador extends JFrame {
 			e1.printStackTrace();
 		}
 	}
-
-
-
 
 
 	private void datosTablaPrecios(BBDD bd, Precios precio) throws SQLException {
@@ -1127,56 +1112,46 @@ public class VAdministrador extends JFrame {
 	}
 
 
-	private void Sesiones(JPanel panelSesiones, JTabbedPane pestana) {
-		 
+	private void Sesiones(JPanel panelSesiones, JTabbedPane pestana, BBDD bd) {
+		 Sesion sesiones = new Sesion();
 		pestana.addTab("Sesiones", null, panelSesiones, null);
 		panelSesiones.setLayout(null);
 		
-		JLabel lblIdDeSalaEnSesion = new JLabel("Id Sala");
-		lblIdDeSalaEnSesion .setBounds(22, 34, 61, 14);
-		panelSesiones.add(lblIdDeSalaEnSesion );
-		
-		textField_6 = new JTextField();
-		textField_6.setBounds(124, 31, 44, 20);
-		panelSesiones.add(textField_6);
-		textField_6.setColumns(10);
-		
-		JLabel lblNombreDeSalaEnSesion = new JLabel("Nombre de Sala");
-		lblNombreDeSalaEnSesion .setBounds(22, 78, 96, 14);
+		JLabel lblNombreDeSalaEnSesion = new JLabel("Sala");
+		lblNombreDeSalaEnSesion .setBounds(22, 34, 96, 14);
 		panelSesiones.add(lblNombreDeSalaEnSesion );
 		
 		textField_7 = new JTextField();
-		textField_7.setBounds(124, 75, 121, 20);
+		textField_7.setBounds(124, 31, 121, 20);
 		panelSesiones.add(textField_7);
 		textField_7.setColumns(10);
 		
-		JLabel lblIdPelicula = new JLabel("Id Pelicula");
-		lblIdPelicula.setBounds(22, 121, 61, 14);
-		panelSesiones.add(lblIdPelicula);
-		
-		textField_8 = new JTextField();
-		textField_8.setBounds(124, 118, 44, 20);
-		panelSesiones.add(textField_8);
-		textField_8.setColumns(10);
-		
-		JLabel lblNombreDePelicula = new JLabel("Nombre de Pelicula");
-		lblNombreDePelicula.setBounds(22, 166, 96, 14);
+		JLabel lblNombreDePelicula = new JLabel("Pelicula");
+		lblNombreDePelicula.setBounds(22, 78, 96, 14);
 		panelSesiones.add(lblNombreDePelicula);
 		
 		textField_9 = new JTextField();
-		textField_9.setBounds(124, 163, 121, 20);
+		textField_9.setBounds(124, 75, 121, 20);
 		panelSesiones.add(textField_9);
 		textField_9.setColumns(10);
 		
 		JLabel lblFechaIncio = new JLabel("Fecha Inicio");
 		lblFechaIncio.setBounds(302, 34, 68, 14);
 		panelSesiones.add(lblFechaIncio);
-
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(384, 78, 203, 22);
+		panelSesiones.add(dateChooser);
+		
+		
 		
 		JLabel lblFechaFin = new JLabel("Fecha Fin");
 		lblFechaFin.setBounds(302, 78, 53, 14);
 		panelSesiones.add(lblFechaFin);
 		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		dateChooser_1.setBounds(384, 34, 203, 22);
+		panelSesiones.add(dateChooser_1);
 
 		JRadioButton rdbtnL = new JRadioButton("L");
 		rdbtnL.setBounds(302, 117, 36, 23);
@@ -1233,16 +1208,23 @@ public class VAdministrador extends JFrame {
 					
 		
 		JLabel lblPrecio = new JLabel("Precio");
-		lblPrecio.setBounds(22, 213, 85, 14);
+		lblPrecio.setBounds(22, 121, 85, 14);
 		panelSesiones.add(lblPrecio);
 		
 
 		JComboBox precioSesion = new JComboBox();
-		precioSesion.setBounds(124, 210, 121, 20);
+		precioSesion.setBounds(124, 121, 121, 20);
 		panelSesiones.add(precioSesion);
 		
-		precioSesion.addItem("Normal");
-		
+		ResultSet rs = sesiones.precios(bd);
+		try {
+			while(rs.next()){
+			precioSesion.addItem(rs.getString("Nombre"));
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		
 		JButton btnBuscar_2 = new JButton("Buscar");
@@ -1261,6 +1243,40 @@ public class VAdministrador extends JFrame {
 		JButton btnInsertar = new JButton("Insertar");
 		btnInsertar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
+				String precio = (String) precioSesion.getSelectedItem();
+				Date fechainicio = dateChooser_1.getDate();
+				Date fechafin = dateChooser.getDate();
+				boolean l = rdbtnL.isSelected();
+				boolean m = rdbtnM.isSelected();
+				boolean x = rdbtnX.isSelected();
+				boolean j = rdbtnJ.isSelected();
+				boolean v = rdbtnV.isSelected();
+				boolean s = rdbtnS.isSelected();
+				boolean d = rdbtnD.isSelected();
+				int hora = (int) horaSesion.getSelectedItem();
+				int minutos = (int) minSesion.getSelectedItem();
+
+					if(idUsed_peliculas != null){
+						int idpelicula = idUsed_peliculas;
+						if(idUsed_salas != null){
+							int idsala = idUsed_salas;
+							if(fechafin == null){
+							sesiones.crearSesion(bd,idpelicula, idsala, precio, fechainicio, hora, minutos);
+							}else{
+								if(l == true || m == true || x == true || j == true || v == true || s == true || d == true){
+									sesiones.crearSesion(bd, idpelicula, idsala, precio, fechainicio, fechafin , l,m,x,j,v,s,d, hora, minutos);
+								}else{
+									sesiones.crearSesion(bd,idpelicula, idsala, precio, fechainicio, fechafin , hora, minutos);
+
+								}
+							}
+							}
+							else JOptionPane.showMessageDialog(null, "No has seleccionado una sala","Resultado Operacion",JOptionPane.ERROR_MESSAGE);
+						}else JOptionPane.showMessageDialog(null, "No has seleccionado una pelicula","Resultado Operacion",JOptionPane.ERROR_MESSAGE);
+						
+						
+
 			}
 		});
 		btnInsertar.setBounds(294, 249, 89, 23);
@@ -1291,11 +1307,11 @@ public class VAdministrador extends JFrame {
 		
 		modelo3 = new DefaultTableModel();
 		 tableSesiones = new JTable(modelo3/*data1, columnNames*/);
-		 modelo3.addColumn("Id");
-		 modelo3.addColumn("Filas");
-		 modelo3.addColumn("Columnas");
-		 modelo3.addColumn("Audio");
-		 modelo3.addColumn("Video");
+		
+		 modelo3.addColumn("Sala");
+		 modelo3.addColumn("Pelicula");
+		 modelo3.addColumn("Precio");
+		 modelo3.addColumn("Fecha");
 		 
 		 tableSesiones .setPreferredScrollableViewportSize(new Dimension(400, 200));
 		 scrollPaneTableSesiones = new JScrollPane(tableSesiones );
@@ -1565,7 +1581,7 @@ public class VAdministrador extends JFrame {
 						e.printStackTrace();
 					}
 			 		dateChooser.setDate(fechapelicula);
-			 			
+			 		textField_9.setText(String.valueOf(modelo.getValueAt(tablePeliculas.rowAtPoint(arg0.getPoint()), 1)));
 			 			 						
 			 	}});
 	}
@@ -1762,6 +1778,7 @@ public class VAdministrador extends JFrame {
 			 		textField_2.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 3)));
 			 		textField_3.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 4)));
 			 		textField_4.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 5)));
+			 		textField_7.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 1)));
 			 		
 			 	}});
 	}
