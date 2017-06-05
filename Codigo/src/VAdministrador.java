@@ -1314,59 +1314,69 @@ public class VAdministrador extends JFrame {
 		modelo3 = new DefaultTableModel();
 		 tableSesiones = new JTable(modelo3/*data1, columnNames*/);
 		
+		 modelo3.addColumn("IDSesion");
 		 modelo3.addColumn("Sala");
 		 modelo3.addColumn("Pelicula");
 		 modelo3.addColumn("Precio");
-		 modelo3.addColumn("Fecha");
+		 modelo3.addColumn("Fecha-hora");
 		 
+		 tableSesiones.getColumnModel().getColumn(0).setMaxWidth(0);
+		 tableSesiones.getColumnModel().getColumn(0).setMinWidth(0);
+		 tableSesiones.getTableHeader().getColumnModel().getColumn(0).setMinWidth(0);
+		 tableSesiones.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
 		 tableSesiones .setPreferredScrollableViewportSize(new Dimension(400, 200));
 		 scrollPaneTableSesiones = new JScrollPane(tableSesiones );
 		 scrollPaneTableSesiones.setBounds(22, 283, 562, 202);
 		 
 		 
 		 panelSesiones.add(scrollPaneTableSesiones );
-		 
+		 try {
 			ResultSet rs = sesiones.verSesiones(bd);
 			 //cargamos datos
 			 while(rs.next()){
 				 Object [] fila = new Object[6];
 				 
-				 		fila[0] = rs.getString("IDPelicula");
-		 				fila[1] = rs.getString("Titulo");
-		 				fila[2] = rs.getString("Genero");
-		 				fila[3] = rs.getString("Director");
-		 				fila[4] = rs.getString("Sinopsis");
-		 				fila[5] = rs.getDate("Estreno");
-				 
-				 modelo.addRow ( fila );
+				 		
+						fila[0] = rs.getString("IDSesion");
+							
+		 				String auxcampo = "Nombre";
+						String tabla = "salas";
+		 				String campo = "IDSalas";
+		 				int id = rs.getInt("IDSala");
+						
+						fila[1] = sesiones.obtenerNombre(bd, tabla, campo, id, auxcampo);
+						
+						auxcampo = "Titulo";
+						tabla = "peliculas";
+		 				campo = "IDPelicula";
+		 				id = rs.getInt("IDPelicula");
+		 				fila[2] = sesiones.obtenerNombre(bd, tabla, campo, id,auxcampo);
+		 				
+		 				auxcampo = "Nombre";
+						tabla = "precios";
+		 				campo = "IDPrecio";
+		 				id = rs.getInt("IDPrecio");
+		 				fila[3] = sesiones.obtenerNombre(bd, tabla, campo, id,auxcampo);
+		 				fila[4] = rs.getString("Fecha-hora");
+				 	
+				 modelo3.addRow ( fila );
 				 
 				 
 			 }
 		 
-		 
-/*
-		
-		 for(int i=0; i<datosSala.size(); i++){
-			 
-			 Object [] fila = new Object[5];
-			 
-			 fila[0] = datosSala.get(i).getIdSala();
-			 fila[1] = datosSala.get(i).getFilas();
-			 fila[2] = datosSala.get(i).getColumnas();
-			 fila[3] = datosSala.get(i).getAudio();
-			 fila[4] = datosSala.get(i).getVideo();
-			 
-			 modelo3.addRow ( fila );
-			 
-		 }
-		 */
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		 
 		 tableSesiones .addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
 			 		
 			 		
-			 		
+			 		textField.setText(String.valueOf(modelo2.getValueAt(tableSalas.rowAtPoint(arg0.getPoint()), 1)));
+
 			 		
 			 		
 			 	}});

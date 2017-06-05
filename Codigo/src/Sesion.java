@@ -118,17 +118,14 @@ public class Sesion {
 	 }
 
 	private void borrarSesion() {
-		// Start of user code for method borrarSesion
-		// End of user code
+
 	}
 
-	public void modificarSesion() {
+	private void modificarSesion() {
 
-		// Start of user code for method modificarSesion
-		// End of user code
 	}
 
-	public ResultSet sesion(BBDD bd){
+	protected ResultSet sesion(BBDD bd){
 		java.sql.Statement stmt;
 		ResultSet rs = null;
 		try {
@@ -142,5 +139,38 @@ public class Sesion {
 	return rs;
 	}
 
+	protected ResultSet verSesiones(BBDD bd){
+		java.sql.Statement stmt;
+		ResultSet rs = null;
+		try {
+			stmt = bd.conexion.createStatement();
+			rs = stmt.executeQuery("SELECT * FROM sesiones");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	return rs;
+	}
 
+	protected String obtenerNombre(BBDD bd, String tabla, String campo, int id, String auxcampo){
+		java.sql.Statement stmt;
+		ResultSet rs = null;
+	
+		String nombre= "";
+		try {
+			stmt = bd.conexion.createStatement();
+			rs = stmt.executeQuery("SELECT "+auxcampo+" FROM "+tabla+" WHERE "+campo+"="+id);
+			while(rs.next()){
+				nombre = rs.getString(auxcampo);
+			}
+			
+			stmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	return nombre;
+	}
 }
