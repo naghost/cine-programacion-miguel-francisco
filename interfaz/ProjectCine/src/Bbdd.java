@@ -3,6 +3,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
@@ -35,11 +37,12 @@ public class Bbdd {
 	            Class.forName("com.mysql.jdbc.Driver").newInstance( );
 	            String servidor = "jdbc:mysql://"+host+"/"+nombre_BD;
 	            con = DriverManager.getConnection(servidor,usuario,pass);
-	            System.out.println("conecta??");
+	            //System.out.println("conecta??");
 	            return con;
 	        }catch(Exception e){
-	            e.printStackTrace();
-	            System.out.println("No funciona");
+	           // e.printStackTrace();
+	           
+	        	
 	            return con;
 	        
 	        }
@@ -57,7 +60,7 @@ public class Bbdd {
 	    	stmt = (Statement) con.createStatement();
 	    	insModEli=(PreparedStatement) con.prepareStatement(sentencia);
 	    	insModEli.executeUpdate();
-	    	con.close();} catch(Exception e){
+	    	} catch(Exception e){
 	    		
 	    		error=true;
 	    	}
@@ -77,20 +80,21 @@ public class Bbdd {
     	resultado = stmt.executeQuery(consulta);
     	
     	
-    	
-    	 while (resultado.next()){
+    	} catch(Exception e){
     		 
-    		 System.out.println(resultado.getString("IDSesion"));
-    		 System.out.println(resultado.getString("IDPelicula"));
-    		 System.out.println(resultado.getString("IDSala"));
-    		 
-    	 }  } catch(Exception e){
-    		 
-    		 
+    		 resultado=null;
     	 }
 		
-    	//con.close();
+    	
 		return resultado;
+	}
+	
+	public void desconexion (){
+		
+		
+		try{
+		con.close();
+		}catch(Exception e){}
 	}
 	
 	

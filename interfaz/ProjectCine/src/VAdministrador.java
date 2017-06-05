@@ -3,23 +3,43 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import com.toedter.calendar.JDateChooser;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -27,19 +47,32 @@ public class VAdministrador extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelSalas;
+	//No necesito
 	private JTextField textFTituloPelicula;
 	private JTextField textFTitulo;
 	private JTextField textFDirectorPeliculas;
 	private JTextField textFBusquedaPeliculas;
+	//
+	private SimpleDateFormat formatFechaSQL;
+	private SimpleDateFormat formatFechaDate;
+	private int idDes=0;
+	private int idSoc=0;
+	private int idEmp=0;
+	private JDateChooser cFecIniDescuentos;
+	private JDateChooser cFecFinDescuentos;
+	//No necesito
 	private DefaultTableModel modelo;
 	private DefaultTableModel modelo2;
 	private DefaultTableModel modelo3;
-	private DefaultTableModel modelo4;
-	private DefaultTableModel modelo5;
+	//
+	private DefaultTableModel modelTableDescuentos;
+	private DefaultTableModel modelTableEntradas;
+	//No necesito
 	private DefaultTableModel modelo6;
-	private DefaultTableModel modelo7;
-	private DefaultTableModel modelo8;
-	private DefaultTableModel modelo9;
+	//
+	private DefaultTableModel modelTablePagos;
+	private DefaultTableModel modelTableSocios;
+	private DefaultTableModel modelTableEmpleados;
 	private JTable tablePeliculas;
 	private JTable tableSalas;
 	private JTable tableSesiones;
@@ -59,6 +92,7 @@ public class VAdministrador extends JFrame {
 	private JScrollPane scrollPaneTableSocios;
 	private JScrollPane scrollPaneTableEmpleados;
 	private ArrayList <Sala> datosSala = new ArrayList<Sala>();
+	//no lo necesito
 	private boolean control=true;
 	private JTextField textField;
 	private JTextField textField_1;
@@ -70,30 +104,34 @@ public class VAdministrador extends JFrame {
 	private JTextField textField_7;
 	private JTextField textField_8;
 	private JTextField textField_9;
-
 	private JTextField textField_11;
-	private JTextField textField_12;
-	private JTextField textField_13;
-	private JTextField textField_14;
-	private JTextField textField_15;
+	//
+	private JTextField tFNombreDescuento;
+	private JSpinner sPPorDescuento;
+	/*private JTextField tFPorDescuentos;*/
+	private JTextField tFBuscarDescuento;
+	private JTextField tFEntradas;
+	//no necesito
 	private JTextField textField_10;
 	private JTextField textField_16;
 	private JTextField textField_17;
-	private JTextField textField_18;
-	private JTextField textField_19;
-	private JTextField textField_20;
-	private JTextField textField_21;
-	private JTextField textField_22;
-	private JTextField textField_23;
-	private JTextField textField_24;
-	private JTextField textField_25;
-	private JTextField textField_26;
-	private ControlErrores ce = new ControlErrores();
-
+	//
+	private JTextField tFPago;
+	private JTextField tFNombreSocio;
+	private JTextField tFApellidosSocio;
+	private JTextField tFDniSocio;
+	private JTextField tFBuscarSocio;
+	private JTextField tFNombreEmpleado;
+	private JTextField tFApellidosEmpleado;
+	private JTextField tFDniEmpleado;
+	private JTextField tFBuscarEmpleado;
+	private Bbdd bd = new Bbdd();
+	private ResultSet contiene=null;
+	private String consulta="";
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -104,7 +142,7 @@ public class VAdministrador extends JFrame {
 				}
 			}
 		});
-	}*/
+	}
 
 	/**
 	 * Create the frame.
@@ -122,6 +160,10 @@ public class VAdministrador extends JFrame {
 		contentPane.add(pestana, BorderLayout.CENTER);
 		
 		JPanel panelPeliculas = new JPanel();
+		
+		
+		
+		//Ventana de Peliculas
 		pestana.addTab("Peliculas", null, panelPeliculas, null);
 		panelPeliculas.setLayout(null);
 		
@@ -379,9 +421,9 @@ public class VAdministrador extends JFrame {
 			 		
 			 		
 			 	}});
+		 //Termina Ventana de Peliculas
 		 
-		 //Panel 2 de las Salas
-		 
+		 //Ventana de Salas
 		 JPanel panelSalas = new JPanel();
 			pestana.addTab("Salas", null, panelSalas, null);
 			panelSalas.setLayout(null);
@@ -524,6 +566,8 @@ public class VAdministrador extends JFrame {
 				 	}});
 			 
 			 
+			 
+			 // Ventana de Sesiones
 			 JPanel panelSesiones = new JPanel();
 				pestana.addTab("Sesiones", null, panelSesiones, null);
 				panelSesiones.setLayout(null);
@@ -928,229 +972,112 @@ public class VAdministrador extends JFrame {
 					 		
 					 		
 					 	}});
+				 //Fin ventana de Sesiones
 				 
+				 
+				 //Ventana de Descuentos
 				 JPanel panelDescuentos = new JPanel();
 					pestana.addTab("Descuentos", null, panelDescuentos, null);
 					panelDescuentos.setLayout(null);
 					
-					JLabel lblNombre_1 = new JLabel("Nombre ");
-					lblNombre_1.setBounds(25, 36, 58, 14);
-					panelDescuentos.add(lblNombre_1);
 					
-					textField_12 = new JTextField();
-					textField_12.setBounds(102, 33, 145, 20);
-					panelDescuentos.add(textField_12);
-					textField_12.setColumns(10);
+					JLabel lblNombreDescuento = new JLabel("Nombre ");
+					lblNombreDescuento.setBounds(25, 36, 58, 14);
+					panelDescuentos.add(lblNombreDescuento);
 					
-					JLabel lblDescripcion = new JLabel("Descripcion");
-					lblDescripcion.setBounds(25, 87, 68, 14);
-					panelDescuentos.add(lblDescripcion);
+					tFNombreDescuento = new JTextField();
+					tFNombreDescuento.setBounds(102, 33, 145, 20);
+					panelDescuentos.add(tFNombreDescuento);
+					tFNombreDescuento.setColumns(10);
+					JLabel lblDescDescuento = new JLabel("Descripcion");
+					lblDescDescuento.setBounds(25, 87, 68, 14);
+					panelDescuentos.add(lblDescDescuento);
 					
-					JTextArea textArea_1 = new JTextArea();
-					textArea_1.setBounds(102, 82, 145, 105);
-					panelDescuentos.add(textArea_1);
+					tFNombreDescuento.addKeyListener(new KeyAdapter(){
+						 
+						public void keyTyped(KeyEvent e) {
+							
+							if (tFNombreDescuento.getText().length()== 30){
+							
+								e.consume();
+							}
+						    
+						}						 
+						
+					});
+					
+					JTextArea tADesDescuento = new JTextArea();
+					tADesDescuento.setBounds(0, 0, 145, 105);
+					//textArea_1.setEditable(false);
+					tADesDescuento.setLineWrap(true); 
+					JScrollPane scroll = new JScrollPane(tADesDescuento);
+					scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+					scroll.setBounds(102, 82, 145, 105);
+					panelDescuentos.add(scroll);
+									
+					
+					tADesDescuento.addKeyListener(new KeyAdapter(){
+						 
+						public void keyTyped(KeyEvent e) {
+							
+							if (tADesDescuento.getText().length()== 300){
+							
+								e.consume();
+							}
+						    
+						}						 
+						
+					});
 					
 					
 					JLabel lblFIDescuentos = new JLabel("Fecha Inicio");
 					lblFIDescuentos .setBounds(302, 34, 68, 14);
 					panelDescuentos.add(lblFIDescuentos);
 					
+					formatFechaSQL = new java.text.SimpleDateFormat("yyyy-MM-dd");
+					formatFechaDate = new java.text.SimpleDateFormat("dd/MM/yyyy");
 					
-					JComboBox diaFIDescuentos = new JComboBox();
-					diaFIDescuentos.setBounds(380, 31, 46, 20);
-					panelDescuentos.add(diaFIDescuentos);
+					cFecIniDescuentos = new JDateChooser();
+					cFecIniDescuentos.setBounds(450, 34, 95, 20);
+					panelDescuentos.add(cFecIniDescuentos);
 					
-					for(int i=1; i<=31; i++){
-						
-						
-						diaFIDescuentos.addItem(i);
-					}
+					//Cambia formato de fecha
+					cFecIniDescuentos.setDateFormatString("dd/MM/yyyy");
+					//Coloca una fecha por defecto	
+					cFecIniDescuentos.setDate(Calendar.getInstance().getTime());
+					cFecIniDescuentos.setMinSelectableDate(Calendar.getInstance().getTime());
 					
 					
-					
-					JComboBox mesFIDescuentos = new JComboBox(meses);
-					mesFIDescuentos.addItemListener(new ItemListener() {
-						public void itemStateChanged(ItemEvent arg0) {
+					cFecIniDescuentos.addPropertyChangeListener(new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent arg0) { 
 							
+							cFecFinDescuentos.setMinSelectableDate(cFecIniDescuentos.getDate());
 							
-							
-							if(control){
-								
-								control=false;
-							} else {
-								
-								control=true;
-							}
-							
-							if (control){
-							
-							System.out.println(diaFIDescuentos.getItemCount());
-							
-							//diaEstreno.removeAll();
-							
-							if(arg0.getItem().equals("Feb")){
-								
-								
-								if(diaFIDescuentos.getItemCount()==31) {
-									
-									diaFIDescuentos.removeItemAt(30);
-									diaFIDescuentos.removeItemAt(29);
-									
-								}
-								
-								if(diaFIDescuentos.getItemCount()==30) { 
-									
-									diaFIDescuentos.removeItemAt(29);
-								}
-								
-								
-							} else {
-								
-								if( arg0.getItem().equals("Ene") || arg0.getItem().equals("Mar") || arg0.getItem().equals("May") || arg0.getItem().equals("Jul") || arg0.getItem().equals("Ago") || arg0.getItem().equals("Oct") || arg0.getItem().equals("Dic")){
-									diaFIDescuentos.setSelectedItem(31);
-								
-								if(diaFISesion.getItemCount()==29){
-									
-									diaFIDescuentos.addItem("30");
-									diaFIDescuentos.addItem("31");
-								} 
-								
-								if (diaFIDescuentos.getItemCount()==30){
-									
-									diaFIDescuentos.addItem("31");
-								}
-								
-								
-								
-								} else {
-									
-									if(diaFIDescuentos.getItemCount()==29){
-										
-										diaFIDescuentos.addItem("30");
-										
-									} 
-									
-									if (diaFIDescuentos.getItemCount()==31){
-										
-										diaFIDescuentos.removeItemAt(30);
-									}
-									
-									
-								}
-							}}
-						}
-					});
+						}});
 					
-					
-					mesFIDescuentos.setBounds(436, 31, 63, 20);
-					panelDescuentos.add(mesFIDescuentos);
-					mesFIDescuentos.setSelectedIndex(2);
-					
-					
-					
-					JComboBox anoFIDescuentos = new JComboBox(anos);
-					anoFIDescuentos.setBounds(509, 31, 53, 20);
-					panelDescuentos.add(anoFIDescuentos);
 					
 					JLabel lblFFDescuentos = new JLabel("Fecha Fin");
 					lblFFDescuentos.setBounds(302, 78, 53, 14);
 					panelDescuentos.add(lblFFDescuentos);
 					
-					JComboBox diaFFDescuentos = new JComboBox();
-					diaFFDescuentos.setBounds(380, 75, 46, 20);
-					panelDescuentos.add(diaFFDescuentos);
+					cFecFinDescuentos = new JDateChooser();
+					cFecFinDescuentos.setBounds(450, 78, 95, 20);
+					panelDescuentos.add(cFecFinDescuentos);
 					
-					for(int i=1; i<=31; i++){
-						
-						
-						diaFFDescuentos.addItem(i);
-					}
+					//Cambia formato de fecha
+					cFecFinDescuentos.setDateFormatString("dd/MM/yyyy");
+					//Coloca una fecha por defecto	
+					cFecFinDescuentos.setDate(Calendar.getInstance().getTime());
+					cFecFinDescuentos.setMinSelectableDate(Calendar.getInstance().getTime());
+					cFecIniDescuentos.setMaxSelectableDate(cFecFinDescuentos.getDate());
 					
-					
-					
-					JComboBox mesFFDescuentos = new JComboBox(meses);
-					mesFFDescuentos.addItemListener(new ItemListener() {
-						public void itemStateChanged(ItemEvent arg0) {
+					cFecFinDescuentos.addPropertyChangeListener(new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent arg0) { 
 							
-							System.out.println("final");
+							cFecIniDescuentos.setMaxSelectableDate(cFecFinDescuentos.getDate());
 							
-							if(control){
-								
-								control=false;
-							} else {
-								
-								control=true;
-							}
-							
-							if (control){
-							
-							System.out.println(diaFFDescuentos.getItemCount());
-							
-							//diaEstreno.removeAll();
-							
-							if(arg0.getItem().equals("Feb")){
-								
-								
-								if(diaFFDescuentos.getItemCount()==31) {
-									
-									diaFFDescuentos.removeItemAt(30);
-									diaFFDescuentos.removeItemAt(29);
-									
-								}
-								
-								if(diaFFDescuentos.getItemCount()==30) { 
-									
-									diaFFDescuentos.removeItemAt(29);
-								}
-								
-								
-							} else {
-								
-								if( arg0.getItem().equals("Ene") || arg0.getItem().equals("Mar") || arg0.getItem().equals("May") || arg0.getItem().equals("Jul") || arg0.getItem().equals("Ago") || arg0.getItem().equals("Oct") || arg0.getItem().equals("Dic")){
-									diaFFDescuentos.setSelectedItem(31);
-								
-								if(diaFFDescuentos.getItemCount()==29){
-									
-									diaFFDescuentos.addItem("30");
-									diaFFDescuentos.addItem("31");
-								} 
-								
-								if (diaFFDescuentos.getItemCount()==30){
-									
-									diaFFDescuentos.addItem("31");
-								}
-								
-								
-								
-								} else {
-									
-									if(diaFFDescuentos.getItemCount()==29){
-										
-										diaFFDescuentos.addItem("30");
-										
-									} 
-									
-									if (diaFFDescuentos.getItemCount()==31){
-										
-										diaFFDescuentos.removeItemAt(30);
-									}
-									
-									
-								}
-							}}
-						}
-					});
+						}});
 					
-					
-					mesFFDescuentos.setBounds(436, 75, 63, 20);
-					panelDescuentos.add(mesFFDescuentos);
-					mesFFDescuentos.setSelectedIndex(2);
-					
-					
-					
-					JComboBox anoFFDescuentos = new JComboBox(anos);
-					anoFFDescuentos.setBounds(509, 75, 53, 20);
-					panelDescuentos.add(anoFFDescuentos);
 					
 					JRadioButton rdbtnDescuentosL = new JRadioButton("L");
 					rdbtnDescuentosL.setBounds(302, 117, 36, 23);
@@ -1180,115 +1107,472 @@ public class VAdministrador extends JFrame {
 					rdbtnDescuentosD.setBounds(533, 117, 51, 23);
 					panelDescuentos.add(rdbtnDescuentosD);
 					
-					JLabel lblPorcentaje = new JLabel("Porcentaje");
-					lblPorcentaje.setBounds(302, 163, 68, 14);
-					panelDescuentos.add(lblPorcentaje);
+					JLabel lblPorcDescuentos = new JLabel("Porcentaje");
+					lblPorcDescuentos.setBounds(302, 163, 68, 20);
+					panelDescuentos.add(lblPorcDescuentos);
 					
-					textField_13 = new JTextField();
-					textField_13.setBounds(366, 160, 36, 20);
-					panelDescuentos.add(textField_13);
-					textField_13.setColumns(10);
+					sPPorDescuento = new JSpinner();
+					sPPorDescuento.setBounds(366, 160, 36, 20);
+					panelDescuentos.add(sPPorDescuento);
+					SpinnerNumberModel nm = new SpinnerNumberModel();
+			        nm.setMaximum(100);
+			        nm.setMinimum(0);
+			        sPPorDescuento.setModel(nm);
 					
-					JLabel label = new JLabel("%");
-					label.setBounds(412, 163, 19, 14);
-					panelDescuentos.add(label);
+															
+					JLabel lbPorcentaje = new JLabel("%");
+					lbPorcentaje.setBounds(412, 163, 19, 14);
+					panelDescuentos.add(lbPorcentaje);
 					
 					JRadioButton rdbtnTemporal = new JRadioButton("Temporal");
 					rdbtnTemporal.setBounds(453, 159, 109, 23);
 					panelDescuentos.add(rdbtnTemporal);
 					
-					JButton btnBuscar_3 = new JButton("Buscar");
-					btnBuscar_3.addActionListener(new ActionListener() {
+					JButton btnBuscarDescuento = new JButton("Buscar");
+					btnBuscarDescuento.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							
+														 
+							 VaciarTabla(modelTableDescuentos);
+							 
+							 bd.Conexion();
+							 
+							 if(tFBuscarDescuento.getText().equals("")){
+							 
+								 consulta="SELECT * FROM descuentos";
+								 
+							 } else {
+								 
+								 consulta="SELECT * FROM `descuentos` WHERE IDDescuento='"+tFBuscarDescuento.getText()+"' OR Nombre LIKE '%"+tFBuscarDescuento.getText()+"%'";
+								 
+							 }
+							 
+							 contiene=bd.seleccionar(consulta);
+							 
+							 try {	
+									
+								 contiene.last();
+								 
+								
+								 if(contiene.getRow()>0) {
+								
+									 contiene.first();
+									 
+									 do {
+										 System.out.println(contiene.getRow()+" Numero de filas");
+										 
+										 Object [] fila = new Object[8];
+										 
+										 fila[0]=contiene.getString("IDDescuento");
+										 
+										 fila[1] = contiene.getString("Nombre");
+										 
+										 fila[2] = contiene.getString("Descripcion"); 
+										 
+										 String [] fecha = contiene.getString("FechaInicio").split("-");
+										 fila[3] = fecha[2]+"/"+fecha[1]+"/"+fecha[0];
+										
+										  fecha = contiene.getString("FechaFin").split("-");
+										 fila[4] = fecha[2]+"/"+fecha[1]+"/"+fecha[0];
+										 
+										 fila[5] = contiene.getString("DiaSemana");
+										 
+										 fila[6] = contiene.getString("Porcentaje");
+										 
+										 if(contiene.getString("Temporal").equals("0")){
+											 
+											 fila[7] ="No"; 
+											 
+										 } else {
+											 
+											 fila[7] ="Si";
+										 }
+									 			 
+										 modelTableDescuentos.addRow ( fila );
+										 
+										 
+									 } while(contiene.next());
+								 } else {
+									 
+									 JOptionPane.showMessageDialog(null, "No se han encontrado resultados!!");
+								 }
+									
+								} catch(Exception er){}
+									
+							 bd.desconexion();
 						}
 					});
-					btnBuscar_3.setBounds(21, 213, 96, 23);
-					panelDescuentos.add(btnBuscar_3);
+					btnBuscarDescuento.setBounds(21, 213, 96, 23);
+					panelDescuentos.add(btnBuscarDescuento);
 					
-					textField_14 = new JTextField();
-					textField_14.setBounds(127, 214, 145, 20);
-					panelDescuentos.add(textField_14);
-					textField_14.setColumns(10);
+					tFBuscarDescuento = new JTextField();
+					tFBuscarDescuento.setBounds(127, 214, 145, 20);
+					panelDescuentos.add(tFBuscarDescuento);
+					tFBuscarDescuento.setColumns(10);
 					
-					JButton btnAadir_2 = new JButton("A\u00F1adir");
-					btnAadir_2.addActionListener(new ActionListener() {
+					tFBuscarDescuento.addKeyListener(new KeyAdapter(){
+						 
+						public void keyTyped(KeyEvent e) {
+							
+							if (tFBuscarDescuento.getText().length()== 30){
+							
+								e.consume();
+							}
+						    
+						}						 
+						
+					});
+					
+					JButton btnAddDescuento = new JButton("A\u00F1adir");
+					btnAddDescuento.setBounds(287, 213, 89, 23);
+					panelDescuentos.add(btnAddDescuento);
+					
+					btnAddDescuento.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							
+							String diasSemana="";
+							
+							if (rdbtnDescuentosD.isSelected()) {
+								
+								diasSemana=diasSemana+"1";
+							}
+							
+							if (rdbtnDescuentosL.isSelected()) {
+								
+								diasSemana=diasSemana+"2";
+							}
+							
+							if (rdbtnDescuentosM.isSelected()) {
+								
+								diasSemana=diasSemana+"3";
+							}
+							
+							if (rdbtnDescuentosX.isSelected()) {
+								
+								diasSemana=diasSemana+"4";
+							}
+							
+							if (rdbtnDescuentosJ.isSelected()) {
+								
+								diasSemana=diasSemana+"5";
+							}
+							
+							if (rdbtnDescuentosV.isSelected()) {
+								
+								diasSemana=diasSemana+"6";
+							}
+							
+							if (rdbtnDescuentosS.isSelected()) {
+								
+								diasSemana=diasSemana+"7";
+							} 
+							
+							if(diasSemana.equals("")){
+								
+								diasSemana="1234567";
+							}
+							
+							
+							if(!tFNombreDescuento.getText().equals("") && !sPPorDescuento.getValue().toString().equals("") && !tADesDescuento.getText().equals("")){
+								
+							Descuento desc= new Descuento(tFNombreDescuento.getText(), tADesDescuento.getText(), cFecIniDescuentos.getDate(), cFecFinDescuentos.getDate(), diasSemana, rdbtnTemporal.isSelected(), Integer.parseInt(sPPorDescuento.getValue().toString()));
+							
+							consulta="INSERT INTO `descuentos`(`Nombre`, `Descripcion`, `FechaInicio`, `FechaFin`, `DiaSemana`, `Porcentaje`, `Temporal`) VALUES ('"+desc.getNombreDescuento()+"','"+desc.getDescripcion()+"','"+formatFechaSQL.format(desc.getFechaInicio())+"','"+formatFechaSQL.format(desc.getFechaFin())+"','"+desc.getDiaSemana()+"','"+desc.getPorcentaje()+"','"+desc.getPorcentaje()+"')";
+							
+							
+							if(bd.Conexion()==null) {
+					 			
+					 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+					 			
+					 		}
+							
+							bd.insModEli(consulta);
+							
+							bd.desconexion();							
+							
+							JOptionPane.showMessageDialog(null, "Los datos se han insertado correctamente");
+							VaciarTabla(modelTableDescuentos);
+							
+							} else {
+								
+								JOptionPane.showMessageDialog(null, "Debes de rellenar los campos!!");
+							}
+							
+									
 						}
 					});
-					btnAadir_2.setBounds(287, 213, 89, 23);
-					panelDescuentos.add(btnAadir_2);
 					
-					JButton btnModificar_3 = new JButton("Modificar");
-					btnModificar_3.addActionListener(new ActionListener() {
+					
+					JButton btnModDescuento = new JButton("Modificar");
+					btnModDescuento.setBounds(380, 213, 89, 23);
+					panelDescuentos.add(btnModDescuento);
+					
+					btnModDescuento.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							
+							if(idDes>0) {
+								
+								String diasSemana="";
+								
+								if (rdbtnDescuentosD.isSelected()) {
+									
+									diasSemana=diasSemana+"1";
+								}
+								
+								if (rdbtnDescuentosL.isSelected()) {
+									
+									diasSemana=diasSemana+"2";
+								}
+								
+								if (rdbtnDescuentosM.isSelected()) {
+									
+									diasSemana=diasSemana+"3";
+								}
+								
+								if (rdbtnDescuentosX.isSelected()) {
+									
+									diasSemana=diasSemana+"4";
+								}
+								
+								if (rdbtnDescuentosJ.isSelected()) {
+									
+									diasSemana=diasSemana+"5";
+								}
+								
+								if (rdbtnDescuentosV.isSelected()) {
+									
+									diasSemana=diasSemana+"6";
+								}
+								
+								if (rdbtnDescuentosS.isSelected()) {
+									
+									diasSemana=diasSemana+"7";
+								} 
+								
+								if(diasSemana.equals("")){
+									
+									diasSemana="1234567";
+								}
+								
+								
+									if(!tFNombreDescuento.getText().equals("") && !sPPorDescuento.getValue().toString().equals("") && !tADesDescuento.getText().equals("")){
+																						
+										Descuento desc= new Descuento(tFNombreDescuento.getText(), tADesDescuento.getText(), cFecIniDescuentos.getDate(), cFecFinDescuentos.getDate(), diasSemana, rdbtnTemporal.isSelected(), Integer.parseInt(sPPorDescuento.getValue().toString()));
+								
+										consulta="UPDATE `descuentos` SET `Nombre`='"+desc.getNombreDescuento()+"',`Descripcion`='"+desc.getDescripcion()+"',`FechaInicio`='"+formatFechaSQL.format(desc.getFechaInicio())+"',`FechaFin`='"+formatFechaSQL.format(desc.getFechaFin())+"',`DiaSemana`='"+desc.getDiaSemana()+"',`Porcentaje`='"+desc.getPorcentaje()+"',`Temporal`='"+desc.getTemporal()+"' WHERE `IDDescuento`='"+idDes+"'";
+								
+										if(bd.Conexion()==null) {
+								 			
+								 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+								 			
+								 		}
+								
+										bd.insModEli(consulta);
+								
+										bd.desconexion();
+										
+										JOptionPane.showMessageDialog(null, "Descuento Modificado");
+										VaciarTabla(modelTableDescuentos);
+								
+										} else {JOptionPane.showMessageDialog(null, "Debes de rellenar los campos");}
+									
+									} else {JOptionPane.showMessageDialog(null, "Comprueba que has seleccionado un descuento");}
+								
+							}
+							
+							
+						
+					});
+					
+					
+					JButton btnEliDescuento = new JButton("Eliminar");
+					btnEliDescuento.setBounds(479, 213, 89, 23);
+					panelDescuentos.add(btnEliDescuento);
+					
+					btnEliDescuento.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							
+							if(idDes>0) {
+								
+								consulta="DELETE FROM descuentos WHERE `IDDescuento`='"+idDes+"'";
+								
+								if(bd.Conexion()==null) {
+						 			
+						 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+						 			
+						 		}
+							
+								if(!bd.insModEli(consulta)) {
+									
+									JOptionPane.showMessageDialog(null, "Descuento Eliminado");
+									VaciarTabla(modelTableDescuentos);
+																		
+								} else {
+									
+									JOptionPane.showMessageDialog(null, "No se ha podido eliminar el descuento, ya que su información está siendo compartida por otras entidades!!!");
+								}
+							
+								bd.desconexion();
+								
+								
+							} else {
+								
+								JOptionPane.showMessageDialog(null, "Comprueba que has seleccionado un descuento!!");
+							}
+							
+							
 						}
 					});
-					btnModificar_3.setBounds(380, 213, 89, 23);
-					panelDescuentos.add(btnModificar_3);
 					
-					JButton btnEliminar_3 = new JButton("Eliminar");
-					btnEliminar_3.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-						}
-					});
-					btnEliminar_3.setBounds(479, 213, 89, 23);
-					panelDescuentos.add(btnEliminar_3);
-					
-				
-
-					modelo4 = new DefaultTableModel();
-					 tableDescuentos = new JTable(modelo4/*data1, columnNames*/);
-					 modelo4.addColumn("Id");
-					 modelo4.addColumn("Filas");
-					 modelo4.addColumn("Columnas");
-					 modelo4.addColumn("Audio");
-					 modelo4.addColumn("Video");
+					modelTableDescuentos = new DefaultTableModel();
+					 tableDescuentos = new JTable(modelTableDescuentos);
+					 modelTableDescuentos.addColumn("Id");
+					 modelTableDescuentos.addColumn("Nombre");
+					 modelTableDescuentos.addColumn("Descripcion");
+					 modelTableDescuentos.addColumn("Inicio");
+					 modelTableDescuentos.addColumn("Fin");
+					 modelTableDescuentos.addColumn("Dia Sem");
+					 modelTableDescuentos.addColumn("Porcentaje");
+					 modelTableDescuentos.addColumn("Temporal");
 					 
-					 tableDescuentos .setPreferredScrollableViewportSize(new Dimension(400, 200));
+					TableColumn col1Descuentos = tableDescuentos.getColumn("Id");
+					col1Descuentos.setMaxWidth(40);
+					col1Descuentos.setCellRenderer(centrarCell());
+					TableColumn col2Descuentos = tableDescuentos.getColumn("Nombre");
+					col2Descuentos.setMaxWidth(110);
+					col2Descuentos.setCellRenderer(centrarCell());
+					TableColumn col3Descuentos = tableDescuentos.getColumn("Descripcion");
+					col3Descuentos.setMaxWidth(140);
+					col3Descuentos.setCellRenderer(centrarCell());
+					TableColumn col4Descuentos = tableDescuentos.getColumn("Inicio");
+					col4Descuentos.setMaxWidth(70);
+					col4Descuentos.setCellRenderer(centrarCell());
+					TableColumn col5Descuentos = tableDescuentos.getColumn("Fin");
+					col5Descuentos.setMaxWidth(70);
+					col5Descuentos.setCellRenderer(centrarCell());
+					TableColumn col6Descuentos = tableDescuentos.getColumn("Dia Sem");
+					col6Descuentos.setMaxWidth(60);
+					col6Descuentos.setCellRenderer(centrarCell());
+					TableColumn col7Descuentos = tableDescuentos.getColumn("Porcentaje");
+					col7Descuentos.setMaxWidth(45);
+					col7Descuentos.setCellRenderer(centrarCell());
+					TableColumn col8Descuentos = tableDescuentos.getColumn("Temporal");
+					col8Descuentos.setMaxWidth(50);
+					col8Descuentos.setCellRenderer(centrarCell());
+										 
+					 tableDescuentos .setPreferredScrollableViewportSize(new Dimension(450, 200));
 					 scrollPaneTableDescuentos = new JScrollPane(tableDescuentos );
-					 scrollPaneTableDescuentos.setBounds(25, 259, 537, 226);
-					 
+					 scrollPaneTableDescuentos.setBounds(25, 259, 587, 226);
 					 
 					 panelDescuentos.add(scrollPaneTableDescuentos );
 					 
-					 
-					 
-					 
-					 //cargamos datos
-					 for(int i=0; i<18; i++){
-						 
-						 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-						 
-						 
-					 }
-					 
 					
-					 for(int i=0; i<datosSala.size(); i++){
-						 
-						 Object [] fila = new Object[5];
-						 
-						 fila[0] = datosSala.get(i).getIdSala();
-						 fila[1] = datosSala.get(i).getFilas();
-						 fila[2] = datosSala.get(i).getColumnas();
-						 fila[3] = datosSala.get(i).getAudio();
-						 fila[4] = datosSala.get(i).getVideo();
-						 
-						 modelo4.addRow ( fila );
-						 
-					 }
-					 
 					 
 					 tableDescuentos .addMouseListener(new MouseAdapter() {
 						 	@Override
 						 	public void mouseClicked(MouseEvent arg0) {
 						 		
+						 		idDes=Integer.parseInt(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),0)));			 		
 						 		
-						 		
-						 		System.out.println(tableDescuentos .rowAtPoint(arg0.getPoint()));			 		
-						 		
+						 		tFNombreDescuento.setText(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),1)));
+						 		tADesDescuento.setText(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),2)));
+						 							 		
+						 		try {
+						 		      String fecha =String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),3));
+						 		      java.util.Date fechaDate =  formatFechaDate.parse(fecha);
+						 		      cFecIniDescuentos.setDate(fechaDate);
+						 		      
+						 		      fecha =String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),4));
+						 		      fechaDate =  formatFechaDate.parse(fecha);
+						 		      cFecFinDescuentos.setDate(fechaDate);
+						 		      } catch (ParseException ex) {
+						 		        
+						 		      } 
+						 		 
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),5)).indexOf("1")<0){
+						 
+						 		 		rdbtnDescuentosD.setSelected(false);
+						 					 
+					 				} else {
+					 					
+					 					rdbtnDescuentosD.setSelected(true);
+					 				}
+						 		 	
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),5)).indexOf("2")<0){
+										 
+						 		 		rdbtnDescuentosL.setSelected(false);
+						 					 
+					 				} else {
+					 					
+					 					rdbtnDescuentosL.setSelected(true);
+					 				}
+						 		 	
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),5)).indexOf("3")<0){
+										 
+						 		 		rdbtnDescuentosM.setSelected(false);
+						 					 
+					 				} else {
+					 					
+					 					rdbtnDescuentosM.setSelected(true);
+					 				}
+						 		 	
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),5)).indexOf("4")<0){
+										 
+						 		 		rdbtnDescuentosX.setSelected(false);
+						 					 
+					 				} else {
+					 					
+					 					rdbtnDescuentosX.setSelected(true);
+					 				}
+						 		 	
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),5)).indexOf("5")<0){
+										 
+						 		 		rdbtnDescuentosJ.setSelected(false);
+						 					 
+					 				} else {
+					 					
+					 					rdbtnDescuentosJ.setSelected(true);
+					 				}
+						 		 	
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),5)).indexOf("6")<0){
+										 
+						 		 		rdbtnDescuentosV.setSelected(false);
+						 					 
+					 				} else {
+					 					
+					 					rdbtnDescuentosV.setSelected(true);
+					 				}
+						 		 	
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),5)).indexOf("7")<0){
+										 
+						 		 		rdbtnDescuentosS.setSelected(false);
+						 					 
+					 				} else {
+					 					
+					 					rdbtnDescuentosS.setSelected(true);
+					 				}
+						 		 	
+						 		 	
+						 		 	sPPorDescuento.setValue(Integer.parseInt((String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),6)))));						 		 	
+						 		 	if(String.valueOf(modelTableDescuentos.getValueAt(tableDescuentos.rowAtPoint(arg0.getPoint()),7)).equals("Si")){
+						 		 		
+						 		 		
+						 		 		rdbtnTemporal.setSelected(true);
+						 		 		
+						 		 	} else {
+						 		 		
+						 		 		rdbtnTemporal.setSelected(false);
+						 		 		
+						 		 	}
+						 		 
 						 		
 						 	}});
 					 
+					 
+					 
+					 //Fin Ventana de Descuentos
+					 
+					 //Ventana de Precios
 					 JPanel panelPrecios = new JPanel();
 					 pestana.addTab("Precios", null, panelPrecios , null);
 					 panelPrecios .setLayout(null);
@@ -1401,75 +1685,213 @@ public class VAdministrador extends JFrame {
 						 		
 						 		
 						 	}});
-				 
+					 
+					 //Fin ventana de Precios
+					 
+					 //Ventana de Entradas
 					 JPanel panelEntradas = new JPanel();
 					 pestana.addTab("Entradas", null, panelEntradas, null);
 					 panelEntradas.setLayout(null);
 					 
-					 JButton btnBuscar_4 = new JButton("Buscar");
-					 btnBuscar_4.addActionListener(new ActionListener() {
-					 	public void actionPerformed(ActionEvent e) {
-					 	}
-					 });
-					 btnBuscar_4.setBounds(73, 23, 89, 23);
-					 panelEntradas.add(btnBuscar_4);
-					 
-					 textField_15 = new JTextField();
-					 textField_15.setBounds(172, 24, 183, 20);
-					 panelEntradas.add(textField_15);
-					 textField_15.setColumns(10);
-					 
 					 JComboBox cBCamposEntradas = new JComboBox();
-						
-						
 					 cBCamposEntradas.setBounds(365, 24, 95, 20);
 						panelEntradas.add(cBCamposEntradas);
-						cBCamposEntradas.addItem("Pelicula");
-						cBCamposEntradas.addItem("Sala");
+						cBCamposEntradas.addItem("Entrada");
 						cBCamposEntradas.addItem("Sesion");
-						cBCamposEntradas.addItem("Socios");
-						
-						
-						modelo5 = new DefaultTableModel();
-						 tableEntradas = new JTable(modelo5/*data1, columnNames*/);
-						 modelo5.addColumn("Id");
-						 modelo5.addColumn("Filas");
-						 modelo5.addColumn("Columnas");
-						 modelo5.addColumn("Audio");
-						 modelo5.addColumn("Video");
+						cBCamposEntradas.addItem("Socio");
+						cBCamposEntradas.addItem("Empleado");
+						cBCamposEntradas.addItem("Descuento");
+						cBCamposEntradas.addItem("Suplemento");
+						cBCamposEntradas.addItem("Pago");
+					 
+					 JButton btnBuscarEntrada = new JButton("Buscar");
+					 btnBuscarEntrada.addActionListener(new ActionListener() {
+					 	public void actionPerformed(ActionEvent e) {
+					 		
+					 	
+							 VaciarTabla(modelTableEntradas);
+					 		
+					 		consulta="SELECT * FROM entradas ";
+					 		
+					 		if(!tFEntradas.getText().equals("")){
+					 			
+					 		switch(cBCamposEntradas.getSelectedItem().toString()){
+					 			
+					 			
+					 			case "Entrada":
+					 				
+					 				consulta=consulta+"WHERE IDEntrada=";
+					 				
+					 				break;
+					 			
+					 			case "Sesion":
+					 				
+					 				consulta=consulta+"WHERE IDSesion=";
+					 				
+					 				break;
+					 			case "Socio":
+					 				
+					 				consulta=consulta+"WHERE IDSocio=";
+					 				
+					 				break;
+					 			case "Empleado":
+					 				
+					 				consulta=consulta+"WHERE IDEmpleado=";
+					 				
+					 				break;
+					 			
+					 			case "Descuento":
+				 				
+					 				consulta=consulta+"WHERE IDDescuento=";
+				 				
+					 				break;
+				 				
+					 			case "Suplemento":
+					 				
+					 				consulta=consulta+"WHERE Suplemento=";
+					 				
+					 				break;
+					 			
+					 			
+					 			
+					 			case "Pago":
+				 				
+				 				consulta=consulta+"WHERE IDPago=";
+				 				
+				 				break;
+					 			
+				 			}
+					 			
+					 		consulta=consulta+"'"+tFEntradas.getText()+"'";
+					 			
+					 		}
+					 		
+					 					 		
+					 		if(bd.Conexion()==null) {
+					 			
+					 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+					 			
+					 		}
+					 		contiene=bd.seleccionar(consulta);
+					 		
+					 		try {
+					 		
+					 		contiene.last();
+					 		
+					 		
+					 		
+					 		if(contiene.getRow()>0){
+					 			
+					 			contiene.first();
+					 			
+					 			do {
+					 				
+					 				 Object [] fila = new Object[10];
+									 
+									 fila[0]=contiene.getString("IDEntrada");
+									 fila[1] = contiene.getString("IDSesion");
+									 fila[2] = contiene.getString("IDSocio"); 
+									 fila[3] = contiene.getString("IDEmpleado");
+									 fila[4] = contiene.getString("IDDescuento");
+									 fila[5] = contiene.getString("IDPago");
+									 fila[6] = contiene.getString("Fila");
+									 fila[7] = contiene.getString("Columna");
+									 fila[8] = contiene.getString("Suplemento");
+									 fila[9] = contiene.getString("Precio");
+									 
+									 modelTableEntradas.addRow ( fila );
+									 
+														 				
+					 				
+					 				
+					 			} while(contiene.next());
+					 			
+					 		} else { JOptionPane.showMessageDialog(null, "No se han encontrado resultados!!");}
+					 		
+					 		
+					 		
+					 		} catch(Exception er){
+					 			
+					 			
+					 			
+					 		}}
+					 		
+					 	}
+					 );
+					 btnBuscarEntrada.setBounds(73, 23, 89, 23);
+					 panelEntradas.add(btnBuscarEntrada);
+					 
+					 tFEntradas = new JTextField();
+					 tFEntradas.setBounds(172, 24, 183, 20);
+					 panelEntradas.add(tFEntradas);
+					 tFEntradas.setColumns(10);
+					 
+					 tFEntradas.addKeyListener(new KeyAdapter(){
 						 
-						 tableEntradas .setPreferredScrollableViewportSize(new Dimension(400, 200));
-						 scrollPaneTableEntradas = new JScrollPane(tableEntradas );
-						 scrollPaneTableEntradas.setBounds(41, 77, 492, 408);
+							public void keyTyped(KeyEvent e) {
+								
+								if (tFEntradas.getText().length()== 30){
+								
+									e.consume();
+								}
+							    
+							}						 
+							
+						});
+					 
+					 
+						
+						
+						modelTableEntradas = new DefaultTableModel();
+						tableEntradas = new JTable(modelTableEntradas);
+						modelTableEntradas.addColumn("Id");
+						modelTableEntradas.addColumn("Sesión");
+						modelTableEntradas.addColumn("Id Socio");
+						modelTableEntradas.addColumn("Id Empleado");
+						modelTableEntradas.addColumn("Id Descuento");
+						modelTableEntradas.addColumn("Id Pago");
+						modelTableEntradas.addColumn("Fila");
+						modelTableEntradas.addColumn("Columna");
+						modelTableEntradas.addColumn("Suplemento");
+						modelTableEntradas.addColumn("Precio");
+						
+						TableColumn col1Entradas = tableEntradas.getColumn("Id");
+						col1Entradas.setMaxWidth(30);
+						col1Entradas.setCellRenderer(centrarCell());
+						TableColumn col2Entradas = tableEntradas.getColumn("Sesión");
+						col2Entradas.setMaxWidth(47);
+						col2Entradas.setCellRenderer(centrarCell());
+						TableColumn col3Entradas = tableEntradas.getColumn("Id Socio");
+						col3Entradas.setMaxWidth(50);
+						col3Entradas.setCellRenderer(centrarCell());
+						TableColumn col4Entradas = tableEntradas.getColumn("Id Empleado");
+						col4Entradas.setMaxWidth(90);
+						col4Entradas.setCellRenderer(centrarCell());
+						TableColumn col5Entradas = tableEntradas.getColumn("Id Descuento");
+						col5Entradas.setMaxWidth(95);
+						col5Entradas.setCellRenderer(centrarCell());
+						TableColumn col6Entradas = tableEntradas.getColumn("Id Pago");
+						col6Entradas.setMaxWidth(60);
+						col6Entradas.setCellRenderer(centrarCell());
+						TableColumn col7Entradas = tableEntradas.getColumn("Fila");
+						col7Entradas.setMaxWidth(45);
+						col7Entradas.setCellRenderer(centrarCell());
+						TableColumn col8Entradas = tableEntradas.getColumn("Columna");
+						col8Entradas.setMaxWidth(70);
+						col8Entradas.setCellRenderer(centrarCell());
+						TableColumn col9Entradas = tableEntradas.getColumn("Suplemento");
+						col9Entradas.setMaxWidth(90);
+						col9Entradas.setCellRenderer(centrarCell());
+						TableColumn col10Entradas = tableEntradas.getColumn("Precio");
+						col10Entradas.setMaxWidth(50);
+						col10Entradas.setCellRenderer(centrarCell());
+						
+						tableEntradas .setPreferredScrollableViewportSize(new Dimension(500, 200));
+						scrollPaneTableEntradas = new JScrollPane(tableEntradas );
+						scrollPaneTableEntradas.setBounds(33, 77, 592, 408);
 						 
 						 
 						 panelEntradas.add(scrollPaneTableEntradas );
-						 
-						 
-						 
-						 
-						 //cargamos datos
-						 for(int i=0; i<18; i++){
-							 
-							 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-							 
-							 
-						 }
-						 
-						
-						 for(int i=0; i<datosSala.size(); i++){
-							 
-							 Object [] fila = new Object[5];
-							 
-							 fila[0] = datosSala.get(i).getIdSala();
-							 fila[1] = datosSala.get(i).getFilas();
-							 fila[2] = datosSala.get(i).getColumnas();
-							 fila[3] = datosSala.get(i).getAudio();
-							 fila[4] = datosSala.get(i).getVideo();
-							 
-							 modelo5.addRow ( fila );
-							 
-						 }
 						 
 						 
 						 tableEntradas .addMouseListener(new MouseAdapter() {
@@ -1483,36 +1905,119 @@ public class VAdministrador extends JFrame {
 							 		
 							 	}});
 						 
+						 //Fin Ventana Entradas
+						 
+						 //Ventana Pagos
 						 JPanel panelPagos = new JPanel();
 						 pestana.addTab("Pagos", null, panelPagos , null);
 						 panelPagos.setLayout(null);
 						 
-						 JButton btnBuscar_6 = new JButton("Buscar");
-						 btnBuscar_6.addActionListener(new ActionListener() {
+						 JButton btnBuscarPagos = new JButton("Buscar");
+						 btnBuscarPagos.addActionListener(new ActionListener() {
 						 	public void actionPerformed(ActionEvent e) {
+						 		
+						 								 
+								 VaciarTabla(modelTablePagos);
+						 		
+						 		consulta="SELECT * FROM pagos ";
+						 		
+						 		if(!tFPago.getText().equals("")){
+						 		
+						 			consulta=consulta+"WHERE IDPagos='"+tFPago.getText()+"'";
+						 		
+						 		}
+						 		
+						 		if(bd.Conexion()==null) {
+						 			
+						 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+						 			
+						 		}
+						 		
+						 		contiene=bd.seleccionar(consulta);
+						 		
+						 		try {
+						 		
+						 		contiene.last();
+						 		
+						 						 		
+						 		if(contiene.getRow()>0){
+						 			
+						 			contiene.first();
+						 			
+						 			do {
+						 				
+						 				 Object [] fila = new Object[4];
+										 
+										 fila[0]=contiene.getString("IDPagos");
+										 fila[1] = contiene.getString("PrecioTotal");
+										 fila[2] = contiene.getString("Efectivo"); 
+										 fila[3] = contiene.getString("Tarjeta");
+										
+										 modelTablePagos.addRow ( fila );
+						 				
+						 				
+						 				
+						 			} while(contiene.next());
+						 			
+						 		} else { JOptionPane.showMessageDialog(null, "No se han encontrado resultados!!");}
+						 		
+						 		
+						 		
+						 		} catch(Exception er){
+						 			
+						 			
+						 			
+						 		}
+						 							 		
 						 	}
 						 });
-						 btnBuscar_6.setBounds(36, 43, 89, 23);
-						 panelPagos.add(btnBuscar_6);
+						 btnBuscarPagos.setBounds(36, 43, 89, 23);
+						 panelPagos.add(btnBuscarPagos);
 						 
-						 JLabel lblId = new JLabel("Id:");
-						 lblId.setBounds(152, 47, 14, 14);
-						 panelPagos.add(lblId);
+						 JLabel lblIdPagos = new JLabel("Id:");
+						 lblIdPagos.setBounds(152, 47, 14, 14);
+						 panelPagos.add(lblIdPagos);
 						 
-						 textField_18 = new JTextField();
-						 textField_18.setBounds(176, 44, 144, 20);
-						 panelPagos.add(textField_18);
-						 textField_18.setColumns(10);
+						 tFPago = new JTextField();
+						 tFPago.setBounds(176, 44, 144, 20);
+						 panelPagos.add(tFPago);
+						 tFPago.setColumns(10);
 						 
-							modelo7 = new DefaultTableModel();
+						 tFPago.addKeyListener(new KeyAdapter(){
+							 
+								public void keyTyped(KeyEvent e) {
+									
+									if (tFPago.getText().length()== 30){
+									
+										e.consume();
+									}
+								    
+								}						 
+								
+							});
+						 
+						 
+							modelTablePagos = new DefaultTableModel();
 							
 							
-							tablePagos = new JTable(modelo5/*data1, columnNames*/);
-							 modelo7.addColumn("Id");
-							 modelo7.addColumn("Filas");
-							 modelo7.addColumn("Columnas");
-							 modelo7.addColumn("Audio");
-							 modelo7.addColumn("Video");
+							tablePagos = new JTable(modelTablePagos);
+							 modelTablePagos.addColumn("Id");
+							 modelTablePagos.addColumn("Precio Total");
+							 modelTablePagos.addColumn("Efectivo");
+							 modelTablePagos.addColumn("Tarjeta");
+							 
+							 TableColumn col1Pagos = tablePagos.getColumn("Id");
+							 col1Pagos.setMaxWidth(60);
+							 col1Pagos.setCellRenderer(centrarCell());
+							 TableColumn col2Pagos = tablePagos.getColumn("Precio Total");
+							 col2Pagos.setMaxWidth(190);
+							 col2Pagos.setCellRenderer(centrarCell());
+							 TableColumn col3Pagos = tablePagos.getColumn("Efectivo");
+							 col3Pagos.setMaxWidth(190);
+							 col3Pagos.setCellRenderer(centrarCell());
+							 TableColumn col4Pagos = tablePagos.getColumn("Tarjeta");
+							 col4Pagos.setMaxWidth(190);
+							 col4Pagos.setCellRenderer(centrarCell());
 							 
 							 tablePagos .setPreferredScrollableViewportSize(new Dimension(400, 200));
 							 scrollPaneTablePagos = new JScrollPane(tablePagos );
@@ -1521,123 +2026,299 @@ public class VAdministrador extends JFrame {
 							 
 							 panelPagos.add(scrollPaneTablePagos );
 							 
-							 
-							 
-							 
-							 //cargamos datos
-							 for(int i=0; i<18; i++){
-								 
-								 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-								 
-								 
-							 }
-							 
-							
-							 for(int i=0; i<datosSala.size(); i++){
-								 
-								 Object [] fila = new Object[5];
-								 
-								 fila[0] = datosSala.get(i).getIdSala();
-								 fila[1] = datosSala.get(i).getFilas();
-								 fila[2] = datosSala.get(i).getColumnas();
-								 fila[3] = datosSala.get(i).getAudio();
-								 fila[4] = datosSala.get(i).getVideo();
-								 
-								 modelo7.addRow ( fila );
-								 
-							 }
-							 
-							 
-							 tablePagos .addMouseListener(new MouseAdapter() {
+							tablePagos .addMouseListener(new MouseAdapter() {
 								 	@Override
 								 	public void mouseClicked(MouseEvent arg0) {
 								 		
 								 		
-								 		
-								 		System.out.println(tablePagos .rowAtPoint(arg0.getPoint()));			 		
-								 		
-								 		
-								 	}});
-						 
+								 		//System.out.println(tablePagos .rowAtPoint(arg0.getPoint()));			 		
+							}});
+							 //Fin ventana de Pagos
+							 
+							 //Ventana de Socios
 							 JPanel panelSocios = new JPanel();
 							 pestana.addTab("Socios", null, panelSocios , null);
 							 panelSocios.setLayout(null);
 							 
-							 JLabel lblNombre_3 = new JLabel("Nombre:");
-							 lblNombre_3.setBounds(22, 33, 56, 14);
-							 panelSocios.add(lblNombre_3);
+							 JLabel lblNombreSocio = new JLabel("Nombre:");
+							 lblNombreSocio.setBounds(22, 33, 56, 14);
+							 panelSocios.add(lblNombreSocio);
 							 
-							 textField_19 = new JTextField();
-							 textField_19.setBounds(84, 30, 157, 20);
-							 panelSocios.add(textField_19);
-							 textField_19.setColumns(10);
+							 tFNombreSocio = new JTextField();
+							 tFNombreSocio.setBounds(84, 30, 157, 20);
+							 panelSocios.add(tFNombreSocio);
+							 tFNombreSocio.setColumns(10);
 							 
-							 JLabel lblApellidos = new JLabel("Apellidos");
-							 lblApellidos.setBounds(22, 70, 65, 14);
-							 panelSocios.add(lblApellidos);
-							 
-							 textField_20 = new JTextField();
-							 textField_20.setBounds(84, 67, 157, 20);
-							 panelSocios.add(textField_20);
-							 textField_20.setColumns(10);
-							 
-							 JLabel lblDni = new JLabel("D.N.I");
-							 lblDni.setBounds(22, 112, 56, 14);
-							 panelSocios.add(lblDni);
-							 
-							 textField_21 = new JTextField();
-							 textField_21.setBounds(84, 109, 157, 20);
-							 panelSocios.add(textField_21);
-							 textField_21.setColumns(10);
-							 
-							 JButton btnBuscar_7 = new JButton("Buscar");
-							 btnBuscar_7.addActionListener(new ActionListener() {
-							 	public void actionPerformed(ActionEvent e) {
-							 	}
-							 });
-							 btnBuscar_7.setBounds(22, 151, 89, 23);
-							 panelSocios.add(btnBuscar_7);
-							 
-							 textField_22 = new JTextField();
-							 textField_22.setBounds(121, 152, 162, 20);
-							 panelSocios.add(textField_22);
-							 textField_22.setColumns(10);
-							 
-							 JButton btnNewButton = new JButton("A\u00F1adir");
-							 btnNewButton.addActionListener(new ActionListener() {
-							 	public void actionPerformed(ActionEvent e) {
-							 	}
-							 });
-							 btnNewButton.setBounds(293, 151, 89, 23);
-							 panelSocios.add(btnNewButton);
-							 
-							 JButton btnModificar_5 = new JButton("Modificar");
-							 btnModificar_5.addActionListener(new ActionListener() {
-							 	public void actionPerformed(ActionEvent e) {
-							 	}
-							 });
-							 btnModificar_5.setBounds(392, 151, 89, 23);
-							 panelSocios.add(btnModificar_5);
-							 
-							 JButton btnEiminar = new JButton("Eiminar");
-							 btnEiminar.addActionListener(new ActionListener() {
-							 	public void actionPerformed(ActionEvent e) {
-							 	}
-							 });
-							 btnEiminar.setBounds(491, 151, 89, 23);
-							 panelSocios.add(btnEiminar);
-						 
-						 
-								modelo8 = new DefaultTableModel();
-								
-								
-								tableSocios = new JTable(modelo8/*data1, columnNames*/);
-								 modelo8.addColumn("Id");
-								 modelo8.addColumn("Filas");
-								 modelo8.addColumn("Columnas");
-								 modelo8.addColumn("Audio");
-								 modelo8.addColumn("Video");
+							 tFNombreSocio.addKeyListener(new KeyAdapter(){
 								 
+									public void keyTyped(KeyEvent e) {
+										
+										if (tFNombreSocio.getText().length()== 30){
+										
+											e.consume();
+										}
+									    
+									}						 
+									
+								});
+							 
+							 JLabel lblApellidosSocio = new JLabel("Apellidos");
+							 lblApellidosSocio.setBounds(22, 70, 65, 14);
+							 panelSocios.add(lblApellidosSocio);
+							 
+							 tFApellidosSocio = new JTextField();
+							 tFApellidosSocio.setBounds(84, 67, 157, 20);
+							 panelSocios.add(tFApellidosSocio);
+							 tFApellidosSocio.setColumns(10);
+							 
+							 tFApellidosSocio.addKeyListener(new KeyAdapter(){
+								 
+									public void keyTyped(KeyEvent e) {
+										
+										if ( tFApellidosSocio.getText().length()== 30){
+										
+											e.consume();
+										}
+									    
+									}						 
+									
+								});
+							 
+							 JLabel lblDniSocio = new JLabel("D.N.I");
+							 lblDniSocio.setBounds(22, 112, 56, 14);
+							 panelSocios.add(lblDniSocio);
+							 
+							 tFDniSocio = new JTextField();
+							 tFDniSocio.setBounds(84, 109, 157, 20);
+							 panelSocios.add(tFDniSocio);
+							 tFDniSocio.setColumns(10);
+							 
+							 tFDniSocio.addKeyListener(new KeyAdapter(){
+								 
+									public void keyTyped(KeyEvent e) {
+										
+										if ( tFDniSocio.getText().length()== 9){
+										
+											e.consume();
+										}
+									    
+									}						 
+									
+								});
+							 
+							 JButton btnBuscarSocio = new JButton("Buscar");
+							 btnBuscarSocio.addActionListener(new ActionListener() {
+							 	public void actionPerformed(ActionEvent e) {
+							 		
+							 										 
+							 		VaciarTabla(modelTableSocios);
+									 
+									consulta="SELECT * FROM socios ";
+									
+									if(!tFBuscarSocio.getText().equals("")){
+										
+										consulta=consulta+"WHERE IDSocios='"+tFBuscarSocio.getText()+"' OR Nombre LIKE '%"+tFBuscarSocio.getText()+"%' OR Apellidos LIKE '%"+tFBuscarSocio.getText()+"%' OR DNI='"+tFBuscarSocio.getText()+"'";
+																														
+									}
+									
+									if(bd.Conexion()==null) {
+							 			
+							 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+							 			
+							 		}
+									
+									contiene=bd.seleccionar(consulta);
+							 		
+							 		try {
+							 		
+							 		contiene.last();
+							 		
+							 						 		
+							 		if(contiene.getRow()>0){
+							 			
+							 			contiene.first();
+							 			
+							 			do {
+							 				
+							 				 Object [] fila = new Object[4];
+											 
+											 fila[0]=contiene.getString("IDSocios");
+											 fila[1] =contiene.getString("Nombre");
+											 fila[2] =contiene.getString("Apellidos"); 
+											 fila[3] =contiene.getString("DNI");
+											
+											 modelTableSocios.addRow ( fila );
+							 				
+							 				
+							 				
+							 			} while(contiene.next());
+							 			
+							 		} else { JOptionPane.showMessageDialog(null, "No se han encontrado resultados!!");}
+							 		
+							 		
+							 		
+							 		} catch(Exception er){
+							 			
+							 			
+							 			
+							 		}
+									
+									
+							 		
+							 		
+							 	}
+							 });
+							 btnBuscarSocio.setBounds(22, 151, 89, 23);
+							 panelSocios.add(btnBuscarSocio);
+							 
+							 tFBuscarSocio = new JTextField();
+							 tFBuscarSocio.setBounds(121, 152, 162, 20);
+							 panelSocios.add(tFBuscarSocio);
+							 tFBuscarSocio.setColumns(10);
+							 
+							 tFBuscarSocio.addKeyListener(new KeyAdapter(){
+								 
+									public void keyTyped(KeyEvent e) {
+										
+										if ( tFBuscarSocio.getText().length()== 30){
+										
+											e.consume();
+										}
+									    
+									}						 
+									
+								});
+							 
+							 JButton btnAddSocio = new JButton("A\u00F1adir");
+							 btnAddSocio.addActionListener(new ActionListener() {
+							 	public void actionPerformed(ActionEvent e) {
+							 		
+							 		if(!tFNombreSocio.getText().equals("") && !tFApellidosSocio.getText().equals("") && !tFDniSocio.getText().equals("")){
+							 			
+							 			Usuario s = new Socio(tFNombreSocio.getText(), tFApellidosSocio.getText(), tFDniSocio.getText());
+							 			
+							 			if(((Socio)s).comprobarDni()){
+							 				
+							 				if(bd.Conexion()==null) {
+									 			
+									 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+									 			
+									 		}
+							 				
+							 				consulta="INSERT INTO `socios`( `Nombre`, `Apellidos`, `DNI`) VALUES ('"+((Socio)s).getNombre()+"', '"+((Socio)s).getApellidos()+"', '"+((Socio)s).getDni()+"')";
+							 				bd.insModEli(consulta);
+							 				bd.desconexion();
+							 				
+							 				JOptionPane.showMessageDialog(null, "Se han introducido los datos correctamente");
+							 				VaciarTabla(modelTableSocios);
+							 				
+							 			} else { JOptionPane.showMessageDialog(null, "El DNI o formato no es el correcto!! El formato correcto es: NNNNNNNNL");}
+							 			
+							 			
+							 		} else {JOptionPane.showMessageDialog(null, "Debes de rellenar todos los campos!!");}
+							 		
+							 		
+							 	}
+							 });
+							 btnAddSocio.setBounds(293, 151, 89, 23);
+							 panelSocios.add(btnAddSocio);
+							 
+							 JButton btnModificarSocio = new JButton("Modificar");
+							 btnModificarSocio.addActionListener(new ActionListener() {
+							 	public void actionPerformed(ActionEvent e) {
+							 		
+							 		if(!tFNombreSocio.getText().equals("") && !tFApellidosSocio.getText().equals("") && !tFDniSocio.getText().equals("")){
+							 			
+							 			Usuario s = new Socio(tFNombreSocio.getText(), tFApellidosSocio.getText(), tFDniSocio.getText());
+							 			
+							 			if(((Socio)s).comprobarDni()){
+							 				
+							 				if(bd.Conexion()==null) {
+									 			
+									 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+									 			
+									 		}
+							 				consulta="UPDATE `socios` SET `Nombre`='"+((Socio)s).getNombre()+"',`Apellidos`='"+((Socio)s).getApellidos()+"',`DNI`='"+((Socio)s).getDni()+"' WHERE IDSocios='"+idSoc+"'";
+							 				System.out.println(consulta);
+							 				if(!bd.insModEli(consulta)){
+							 					JOptionPane.showMessageDialog(null, "Se han modificado los datos correctamente");
+							 					VaciarTabla(modelTableSocios);	
+							 				}else {
+							 						
+							 					JOptionPane.showMessageDialog(null, "No se ha podido realizar la operación. Compruebe que Id de Socio tiene Seleccionado");
+							 						
+							 					}
+							 				bd.desconexion();
+							 				
+							 				
+							 				
+							 			} else { JOptionPane.showMessageDialog(null, "El DNI o formato no es el correcto!! El formato correcto es: NNNNNNNNL");}
+							 			
+							 			
+							 		} else {JOptionPane.showMessageDialog(null, "Debes de rellenar todos los campos!!");}
+							 		
+							 		
+							 	}
+							 });
+							 btnModificarSocio.setBounds(392, 151, 89, 23);
+							 panelSocios.add(btnModificarSocio);
+							 
+							 JButton btnEiminarSocio = new JButton("Eiminar");
+							 btnEiminarSocio.addActionListener(new ActionListener() {
+							 	public void actionPerformed(ActionEvent e) {
+							 		
+							 		if(bd.Conexion()==null) {
+							 			
+							 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+							 			
+							 		}
+							 		consulta="DELETE FROM socios WHERE IDSocios='"+idSoc+"'";
+							 		if(idSoc!=0){
+							 			if(!bd.insModEli(consulta)) {
+							 				
+							 				JOptionPane.showMessageDialog(null, "Se han eliminado los datos correctamente");
+							 				VaciarTabla(modelTableSocios);
+							 				
+							 			} else {
+							 				
+							 				JOptionPane.showMessageDialog(null, "No se puede eliminar el socio seleccionado, ya que su Id lo utilizan otras entidades");
+							 			}
+							 			
+							 										 									 			
+							 		} else {
+							 			
+							 			JOptionPane.showMessageDialog(null, "No se ha podido realizar la operación. Compruebe que Id de Socio tiene Seleccionado");
+							 			
+							 		}
+							 		bd.desconexion();
+							 	}
+							 });
+							 btnEiminarSocio.setBounds(491, 151, 89, 23);
+							 panelSocios.add(btnEiminarSocio);
+						 
+						 
+								modelTableSocios = new DefaultTableModel();
+								
+								
+								tableSocios = new JTable(modelTableSocios);
+								 modelTableSocios.addColumn("Id");
+								 modelTableSocios.addColumn("Nombre");
+								 modelTableSocios.addColumn("Apellidos");
+								 modelTableSocios.addColumn("D.N.I");
+								 
+								 TableColumn col1Socios = tableSocios.getColumn("Id");
+								 col1Socios.setMaxWidth(80);
+								 col1Socios.setCellRenderer(centrarCell());
+								 TableColumn col2Socios = tableSocios.getColumn("Nombre");
+								 col2Socios.setMaxWidth(150);
+								 col2Socios.setCellRenderer(centrarCell());
+								 TableColumn col3Socios = tableSocios.getColumn("Apellidos");
+								 col3Socios.setMaxWidth(230);
+								 col3Socios.setCellRenderer(centrarCell());
+								 TableColumn col4Socios = tableSocios.getColumn("D.N.I");
+								 col4Socios.setMaxWidth(120);
+								 col4Socios.setCellRenderer(centrarCell());
+															 
 								 tableSocios.setPreferredScrollableViewportSize(new Dimension(400, 200));
 								 scrollPaneTableSocios = new JScrollPane(tableSocios );
 								 scrollPaneTableSocios.setBounds(22, 201, 558, 284);
@@ -1646,91 +2327,124 @@ public class VAdministrador extends JFrame {
 								 panelSocios.add(scrollPaneTableSocios );
 								 
 								 
-								 
-								 
-								 //cargamos datos
-								 for(int i=0; i<18; i++){
-									 
-									 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-									 
-									 
-								 }
-								 
-								
-								 for(int i=0; i<datosSala.size(); i++){
-									 
-									 Object [] fila = new Object[5];
-									 
-									 fila[0] = datosSala.get(i).getIdSala();
-									 fila[1] = datosSala.get(i).getFilas();
-									 fila[2] = datosSala.get(i).getColumnas();
-									 fila[3] = datosSala.get(i).getAudio();
-									 fila[4] = datosSala.get(i).getVideo();
-									 
-									 modelo8.addRow ( fila );
-									 
-								 }
-								 
-								 
+																			 
 								 tableSocios .addMouseListener(new MouseAdapter() {
 									 	@Override
 									 	public void mouseClicked(MouseEvent arg0) {
 									 		
-									 		
-									 		
-									 		System.out.println(tableSocios .rowAtPoint(arg0.getPoint()));			 		
-									 		
+									 		idSoc=(Integer.parseInt(String.valueOf(modelTableSocios.getValueAt(tableSocios.rowAtPoint(arg0.getPoint()),0))));
+									 		tFNombreSocio.setText(String.valueOf(modelTableSocios.getValueAt(tableSocios.rowAtPoint(arg0.getPoint()),1)));			 		
+									 		tFApellidosSocio.setText(String.valueOf(modelTableSocios.getValueAt(tableSocios.rowAtPoint(arg0.getPoint()),2)));
+									 		tFDniSocio.setText(String.valueOf(modelTableSocios.getValueAt(tableSocios.rowAtPoint(arg0.getPoint()),3)));
 									 		
 									 	}});
-						
+								 //Fin ventana de Socios
+								 
+								 
+								 //Ventana de Empleados
 								 JPanel panelEmpleados = new JPanel();
 								 pestana.addTab("Empleados", null, panelEmpleados , null);
 								 panelEmpleados.setLayout(null);
 								 
-								 JLabel lblNombre_4 = new JLabel("Nombre");
-								 lblNombre_4.setBounds(22, 25, 46, 14);
-								 panelEmpleados.add(lblNombre_4);
+								 JLabel lblNombreEmpleado = new JLabel("Nombre");
+								 lblNombreEmpleado.setBounds(22, 25, 46, 14);
+								 panelEmpleados.add(lblNombreEmpleado);
 								 
-								 textField_23 = new JTextField();
-								 textField_23.setBounds(87, 22, 157, 20);
-								 panelEmpleados.add(textField_23);
-								 textField_23.setColumns(10);
+								 tFNombreEmpleado = new JTextField();
+								 tFNombreEmpleado.setBounds(87, 22, 157, 20);
+								 panelEmpleados.add(tFNombreEmpleado);
+								 tFNombreEmpleado.setColumns(10);
 								 
-								 JLabel lblApellidos_1 = new JLabel("Apellidos");
-								 lblApellidos_1.setBounds(22, 69, 67, 14);
-								 panelEmpleados.add(lblApellidos_1);
+								 tFNombreEmpleado.addKeyListener(new KeyAdapter(){
+									 
+										public void keyTyped(KeyEvent e) {
+											
+											if ( tFNombreEmpleado.getText().length()== 30){
+											
+												e.consume();
+											}
+										    
+										}						 
+										
+									});
 								 
-								 textField_24 = new JTextField();
-								 textField_24.setBounds(87, 66, 157, 20);
-								 panelEmpleados.add(textField_24);
-								 textField_24.setColumns(10);
+								 JLabel lblApellidosEmpleado = new JLabel("Apellidos");
+								 lblApellidosEmpleado.setBounds(22, 69, 67, 14);
+								 panelEmpleados.add(lblApellidosEmpleado);
 								 
-								 JLabel lblDni_1 = new JLabel("D.N.I");
-								 lblDni_1.setBounds(22, 112, 46, 14);
-								 panelEmpleados.add(lblDni_1);
+								 tFApellidosEmpleado = new JTextField();
+								 tFApellidosEmpleado.setBounds(87, 66, 157, 20);
+								 panelEmpleados.add(tFApellidosEmpleado);
+								 tFApellidosEmpleado.setColumns(10);
 								 
-								 textField_25 = new JTextField();
-								 textField_25.setBounds(87, 109, 157, 20);
-								 panelEmpleados.add(textField_25);
-								 textField_25.setColumns(10);
+								 tFApellidosEmpleado.addKeyListener(new KeyAdapter(){
+									 
+										public void keyTyped(KeyEvent e) {
+											
+											if ( tFApellidosEmpleado.getText().length()== 30){
+											
+												e.consume();
+											}
+										    
+										}						 
+										
+									});
 								 
-								 JComboBox puesto = new JComboBox();
-								 puesto.setBounds(424, 22, 133, 20);
-								 panelEmpleados.add(puesto);
+								 JLabel lblDniEmpleado = new JLabel("D.N.I");
+								 lblDniEmpleado.setBounds(22, 112, 46, 14);
+								 panelEmpleados.add(lblDniEmpleado);
 								 
-								 puesto.addItem("Administrador");
-								 puesto.addItem("Taquillero");
+								 tFDniEmpleado = new JTextField();
+								 tFDniEmpleado.setBounds(87, 109, 157, 20);
+								 panelEmpleados.add(tFDniEmpleado);
+								 tFDniEmpleado.setColumns(10);
+								 
+								 tFDniEmpleado.addKeyListener(new KeyAdapter(){
+									 
+										public void keyTyped(KeyEvent e) {
+											
+											if ( tFDniEmpleado.getText().length()== 9){
+											
+												e.consume();
+											}
+										    
+										}						 
+										
+									});
+								 
+								 JComboBox cBPuestoEmpleado = new JComboBox();
+								 cBPuestoEmpleado.setBounds(424, 22, 133, 20);
+								 panelEmpleados.add(cBPuestoEmpleado);
+								 
+								 cBPuestoEmpleado.addItem("Administrador");
+								 cBPuestoEmpleado.addItem("Taquillero");
 								 
 								 
-								 modelo9 = new DefaultTableModel();
+								 modelTableEmpleados = new DefaultTableModel();
 									
 									
-									tableEmpleados = new JTable(modelo9/*data1, columnNames*/);
-									 modelo9.addColumn("Id");
-									 modelo9.addColumn("Filas");
-									 modelo9.addColumn("Columnas");
-									 modelo9.addColumn("Audio");
-									 modelo9.addColumn("Video");
+									tableEmpleados = new JTable(modelTableEmpleados/*data1, columnNames*/);
+									 modelTableEmpleados.addColumn("Id");
+									 modelTableEmpleados.addColumn("Nombre");
+									 modelTableEmpleados.addColumn("Apellidos");
+									 modelTableEmpleados.addColumn("DNI");
+									 modelTableEmpleados.addColumn("Puesto");
+									 
+									 TableColumn col1Empleados = tableEmpleados.getColumn("Id");
+									 col1Empleados.setMaxWidth(60);
+									 col1Empleados.setCellRenderer(centrarCell());
+									 TableColumn col2Empleados = tableEmpleados.getColumn("Nombre");
+									 col2Empleados.setMaxWidth(150);
+									 col2Empleados.setCellRenderer(centrarCell());
+									 TableColumn col3Empleados = tableEmpleados.getColumn("Apellidos");
+									 col3Empleados.setMaxWidth(230);
+									 col3Empleados.setCellRenderer(centrarCell());
+									 TableColumn col4Empleados = tableEmpleados.getColumn("DNI");
+									 col4Empleados.setMaxWidth(120);
+									 col4Empleados.setCellRenderer(centrarCell());
+									 TableColumn colEmpleados = tableEmpleados.getColumn("Puesto");
+									 colEmpleados.setMaxWidth(120);
+									 colEmpleados.setCellRenderer(centrarCell());
 									 
 									 tableEmpleados.setPreferredScrollableViewportSize(new Dimension(400, 200));
 									 scrollPaneTableEmpleados = new JScrollPane(tableEmpleados );
@@ -1739,80 +2453,235 @@ public class VAdministrador extends JFrame {
 									 
 									 panelEmpleados.add(scrollPaneTableEmpleados );
 									 
-									 JButton btnBuscar_8 = new JButton("Buscar");
-									 btnBuscar_8.addActionListener(new ActionListener() {
+									 JButton btnBuscarEmpleado = new JButton("Buscar");
+									 btnBuscarEmpleado.addActionListener(new ActionListener() {
 									 	public void actionPerformed(ActionEvent e) {
+									 		
+									 		
+											 
+											 VaciarTabla(modelTableEmpleados);
+											 
+											consulta="SELECT * FROM empleados ";
+											
+											if(!tFBuscarEmpleado.getText().equals("")){
+												
+												consulta=consulta+"WHERE IDEmpleado='"+tFBuscarEmpleado.getText()+"' OR Nombre LIKE '%"+tFBuscarEmpleado.getText()+"%' OR Apellido LIKE '%"+tFBuscarEmpleado.getText()+"%' OR DNI='"+tFBuscarEmpleado.getText()+"' OR Puesto LIKE'%"+tFBuscarEmpleado.getText()+"%'";
+												System.out.println(consulta);																				
+											}
+											
+											if(bd.Conexion()==null) {
+									 			
+									 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+									 			
+									 		}
+											
+											contiene=bd.seleccionar(consulta);
+									 		
+									 		try {
+									 		
+									 		contiene.last();
+									 		
+									 						 		
+									 		if(contiene.getRow()>0){
+									 			
+									 			contiene.first();
+									 			
+									 			do {
+									 				
+									 				 Object [] fila = new Object[5];
+													 
+													 fila[0]=contiene.getString("IDEmpleado");
+													 fila[1] =contiene.getString("Nombre");
+													 fila[2] =contiene.getString("Apellido"); 
+													 fila[3] =contiene.getString("DNI");
+													 fila[4] =contiene.getString("Puesto");
+													
+													 modelTableEmpleados.addRow ( fila );
+									 				
+									 				
+									 				
+									 			} while(contiene.next());
+									 			
+									 		} else { JOptionPane.showMessageDialog(null, "No se han encontrado resultados!!");}
+									 		
+									 		
+									 		
+									 		} catch(Exception er){
+									 			
+									 			
+									 			
+									 		}
 									 	}
 									 });
-									 btnBuscar_8.setBounds(22, 161, 89, 23);
-									 panelEmpleados.add(btnBuscar_8);
+									 btnBuscarEmpleado.setBounds(22, 161, 89, 23);
+									 panelEmpleados.add(btnBuscarEmpleado);
 									 
-									 textField_26 = new JTextField();
-									 textField_26.setBounds(117, 162, 144, 20);
-									 panelEmpleados.add(textField_26);
-									 textField_26.setColumns(10);
+									 tFBuscarEmpleado = new JTextField();
+									 tFBuscarEmpleado.setBounds(117, 162, 144, 20);
+									 panelEmpleados.add(tFBuscarEmpleado);
+									 tFBuscarEmpleado.setColumns(10);
 									 
-									 JButton btnAadir_4 = new JButton("A\u00F1adir");
-									 btnAadir_4.addActionListener(new ActionListener() {
+									 tFBuscarEmpleado.addKeyListener(new KeyAdapter(){
+										 
+											public void keyTyped(KeyEvent e) {
+												
+												if ( tFBuscarEmpleado.getText().length()== 30){
+												
+													e.consume();
+												}
+											    
+											}						 
+											
+										});
+									 
+									 JButton btnAddEmpleado = new JButton("A\u00F1adir");
+									 btnAddEmpleado.addActionListener(new ActionListener() {
 									 	public void actionPerformed(ActionEvent e) {
+									 		
+									 		if(!tFNombreEmpleado.getText().equals("") && !tFApellidosEmpleado.getText().equals("") && !tFDniEmpleado.getText().equals("")){
+									 			
+									 			Usuario s = new Empleado (tFNombreEmpleado.getText(), tFApellidosEmpleado.getText(), tFDniEmpleado.getText(), cBPuestoEmpleado.getSelectedItem().toString());
+									 			
+									 			if(((Empleado)s).comprobarDni()){
+									 				
+									 				if(bd.Conexion()==null) {
+											 			
+											 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+											 			
+											 		}
+									 				consulta="INSERT INTO `empleados`(`Nombre`, `Apellido`, `DNI`, `Puesto`) VALUES ('"+((Empleado)s).getNombre()+"', '"+((Empleado)s).getApellidos()+"','"+((Empleado)s).getDni()+"','"+((Empleado)s).getCategoria()+"')";
+									 				bd.insModEli(consulta);
+									 				bd.desconexion();
+									 				
+									 				JOptionPane.showMessageDialog(null, "Se han introducido los datos correctamente");
+									 				VaciarTabla(modelTableEmpleados);									 				
+									 				
+									 			} else { JOptionPane.showMessageDialog(null, "El DNI o formato no es el correcto!! El formato correcto es: NNNNNNNNL");}
+									 			
+									 			
+									 		} else {JOptionPane.showMessageDialog(null, "Debes de rellenar todos los campos!!");}
+									 		
+									 	
+									 		
 									 	}
 									 });
-									 btnAadir_4.setBounds(278, 161, 89, 23);
-									 panelEmpleados.add(btnAadir_4);
+									 btnAddEmpleado.setBounds(278, 161, 89, 23);
+									 panelEmpleados.add(btnAddEmpleado);
 									 
-									 JButton btnModificar_6 = new JButton("Modificar");
-									 btnModificar_6.addActionListener(new ActionListener() {
+									 JButton btnModificarEmpleado = new JButton("Modificar");
+									 btnModificarEmpleado.addActionListener(new ActionListener() {
 									 	public void actionPerformed(ActionEvent e) {
+									 		
+									 		if(!tFNombreEmpleado.getText().equals("") && !tFApellidosEmpleado.getText().equals("") && !tFDniEmpleado.getText().equals("")){
+									 			
+									 			Usuario s = new Empleado (tFNombreEmpleado.getText(), tFApellidosEmpleado.getText(), tFDniEmpleado.getText(), cBPuestoEmpleado.getSelectedItem().toString());
+									 			
+									 			if(((Empleado)s).comprobarDni()){
+									 				
+									 				if(bd.Conexion()==null) {
+											 			
+											 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+											 			
+											 		}
+									 				consulta="UPDATE `empleados` SET `Nombre`='"+((Empleado)s).getNombre()+"',`Apellido`='"+((Empleado)s).getApellidos()+"',`DNI`='"+((Empleado)s).getDni()+"', `Puesto`= '"+((Empleado)s).getCategoria()+"' WHERE IDEmpleado='"+idEmp+"'";
+									 				
+									 				if(!bd.insModEli(consulta)){
+									 				
+									 					JOptionPane.showMessageDialog(null, "Se han modificado los datos correctamente");
+									 					VaciarTabla(modelTableEmpleados);
+									 				}
+									 				else {
+									 						
+									 					JOptionPane.showMessageDialog(null, "No se ha podido realizar la operación. Compruebe que Id de Empleado tiene Seleccionado");
+									 						
+									 					}
+									 				bd.desconexion();
+									 				
+									 				
+									 				
+									 			} else { JOptionPane.showMessageDialog(null, "El DNI o formato no es el correcto!! El formato correcto es: NNNNNNNNL");}
+									 			
+									 			
+									 		} else {JOptionPane.showMessageDialog(null, "Debes de rellenar todos los campos!!");}
+									 		
 									 	}
 									 });
-									 btnModificar_6.setBounds(377, 162, 89, 23);
-									 panelEmpleados.add(btnModificar_6);
+									 btnModificarEmpleado.setBounds(377, 162, 89, 23);
+									 panelEmpleados.add(btnModificarEmpleado);
 									 
-									 JButton btnEliminar_5 = new JButton("Eliminar");
-									 btnEliminar_5.addActionListener(new ActionListener() {
+									 JButton btnEliminarEmpleado = new JButton("Eliminar");
+									 btnEliminarEmpleado.addActionListener(new ActionListener() {
 									 	public void actionPerformed(ActionEvent e) {
+									 		
+									 		
+									 		if(bd.Conexion()==null) {
+									 			
+									 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+									 			
+									 		}
+									 		consulta="DELETE FROM empleados WHERE IDEmpleado='"+idEmp+"'";
+									 		if(idEmp!=0){
+									 			if(!bd.insModEli(consulta)) {
+									 				
+									 				JOptionPane.showMessageDialog(null, "Se han eliminado los datos correctamente");
+									 				VaciarTabla(modelTableEmpleados);
+									 				
+									 			} else {
+									 				
+									 				JOptionPane.showMessageDialog(null, "No se puede eliminar el empleado seleccionado, ya que su Id lo utilizan otras entidades");
+									 			}
+									 			
+									 										 									 			
+									 		} else {
+									 			
+									 			JOptionPane.showMessageDialog(null, "No se ha podido realizar la operación. Compruebe que Id de Socio tiene Seleccionado");
+									 			
+									 		}
+									 		bd.desconexion();
+									 		
 									 	}
 									 });
-									 btnEliminar_5.setBounds(476, 161, 89, 23);
-									 panelEmpleados.add(btnEliminar_5);
+									 btnEliminarEmpleado.setBounds(476, 161, 89, 23);
+									 panelEmpleados.add(btnEliminarEmpleado);
 									 
 									 
-									 
-									 
-									 //cargamos datos
-									 for(int i=0; i<18; i++){
-										 
-										 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-										 
-										 
-									 }
-									 
-									
-									 for(int i=0; i<datosSala.size(); i++){
-										 
-										 Object [] fila = new Object[5];
-										 
-										 fila[0] = datosSala.get(i).getIdSala();
-										 fila[1] = datosSala.get(i).getFilas();
-										 fila[2] = datosSala.get(i).getColumnas();
-										 fila[3] = datosSala.get(i).getAudio();
-										 fila[4] = datosSala.get(i).getVideo();
-										 
-										 modelo9.addRow ( fila );
-										 
-									 }
 									 
 									 
 									 tableEmpleados .addMouseListener(new MouseAdapter() {
 										 	@Override
 										 	public void mouseClicked(MouseEvent arg0) {
 										 		
-										 		
-										 		
-										 		System.out.println(tableEmpleados .rowAtPoint(arg0.getPoint()));			 		
+										 												 		
+										 		idEmp=(Integer.parseInt(String.valueOf(modelTableEmpleados.getValueAt(tableEmpleados.rowAtPoint(arg0.getPoint()),0))));
+										 		tFNombreEmpleado.setText(String.valueOf(modelTableEmpleados.getValueAt(tableEmpleados.rowAtPoint(arg0.getPoint()),1)));			 		
+										 		tFApellidosEmpleado.setText(String.valueOf(modelTableEmpleados.getValueAt(tableEmpleados.rowAtPoint(arg0.getPoint()),2)));
+										 		tFDniEmpleado.setText(String.valueOf(modelTableEmpleados.getValueAt(tableEmpleados.rowAtPoint(arg0.getPoint()),3)));
+										 		cBPuestoEmpleado.setSelectedItem(String.valueOf(modelTableEmpleados.getValueAt(tableEmpleados.rowAtPoint(arg0.getPoint()),4)));
 										 		
 										 		
 										 	}});
+									 //Fin Ventana de Empleados
 		
 	}
+	
+	
+	public DefaultTableCellRenderer centrarCell(){
+		
+		DefaultTableCellRenderer modelocentrar = new DefaultTableCellRenderer();
+	    modelocentrar.setHorizontalAlignment(SwingConstants.CENTER);
+
+	    return modelocentrar; 
+	    
+		}
+	
+	public void VaciarTabla(DefaultTableModel model){
+		
+		for(int i=model.getRowCount()-1; i>=0; i--) {
+			
+			model.removeRow(i);
+					
+		}	
+	}
+
+
 }
