@@ -2549,7 +2549,7 @@ public class VAdministrador extends JFrame {
 											 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
 											 			
 											 		}
-									 				consulta="INSERT INTO `empleados`(`Nombre`, `Apellido`, `DNI`, `Puesto`) VALUES ('"+((Empleado)s).getNombre()+"', '"+((Empleado)s).getApellidos()+"','"+((Empleado)s).getDni()+"','"+((Empleado)s).getCategoria()+"')";
+									 				consulta="INSERT INTO `empleados`(`Nombre`, `Apellido`, `DNI`, `Puesto`, 'Clave') VALUES ('"+((Empleado)s).getNombre()+"', '"+((Empleado)s).getApellidos()+"','"+((Empleado)s).getDni()+"','"+((Empleado)s).getCategoria()+"', 'x')";
 									 				bd.insModEli(consulta);
 									 				bd.desconexion();
 									 				
