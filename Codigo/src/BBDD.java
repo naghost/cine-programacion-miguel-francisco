@@ -30,7 +30,7 @@ public class BBDD {
 		ResultSet rs = null;
 		try {
 			stmt = conexion.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM "+tabla+" WHERE "+campo+" LIKE '%"+valor+"'");
+			rs = stmt.executeQuery("SELECT * FROM "+tabla+" WHERE "+campo+" LIKE '%"+valor+"%'");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

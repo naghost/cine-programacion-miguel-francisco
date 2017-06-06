@@ -613,11 +613,7 @@ public class VAdministrador extends JFrame {
 		 textField_16.setColumns(10);
 		 
 		 JButton btnBuscar_5 = new JButton("Buscar");
-		 btnBuscar_5.addActionListener(new ActionListener() {
-		 	public void actionPerformed(ActionEvent e) {
-		 	
-		 	}
-		 });
+		 
 		 btnBuscar_5.setBounds(25, 120, 89, 23);
 		 panelPrecios.add(btnBuscar_5);
 		 
@@ -625,6 +621,28 @@ public class VAdministrador extends JFrame {
 		 textField_17.setBounds(125, 121, 122, 20);
 		 panelPrecios.add(textField_17);
 		 textField_17.setColumns(10);
+		 
+		 btnBuscar_5.addActionListener(new ActionListener() {
+			 	public void actionPerformed(ActionEvent e) {
+			 		 String valor = textField_17.getText();
+			 		bd.tabla = "precios";
+					bd.campo = "Nombre";
+					bd.valor = valor;
+			 		ResultSet rs =  bd.buscar();
+			 		try {
+						datosTablaPrecios(rs);
+					} catch (SQLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+			 		try {
+						rs.close();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			 	}
+			 });
 		 
 		 JButton btnAadir_3 = new JButton("A\u00F1adir");
 		 btnAadir_3.addActionListener(new ActionListener() {
@@ -752,6 +770,27 @@ public class VAdministrador extends JFrame {
 			 	}});
 	}
 	
+	
+	private void datosTablaPrecios(ResultSet rs) throws SQLException {
+		for(int i = (modelo6.getRowCount()-1); i>=0;i--){
+			modelo6.removeRow(i);
+			} 
+		
+		while(rs.next()){
+		
+			 
+			 Object [] fila = new Object[4];
+			 
+		 		fila[0] = rs.getString("IDPrecio");
+				fila[1] = rs.getString("Nombre");
+				fila[2] = rs.getString("Precio");
+				
+				 modelo6.addRow ( fila );
+				 
+			 
+		 }
+		 
+	}
 
 	private void Descuentos(JTabbedPane pestana, String[] meses, Integer[] anos, JComboBox diaFISesion) {
 		 
@@ -1528,11 +1567,7 @@ public class VAdministrador extends JFrame {
 		panelPeliculas.add(btnEliminar);
 		
 		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
+		
 		btnBuscar.setBounds(24, 170, 89, 23);
 		panelPeliculas.add(btnBuscar);
 		
@@ -1541,6 +1576,22 @@ public class VAdministrador extends JFrame {
 		panelPeliculas.add(textFBusquedaPeliculas);
 		textFBusquedaPeliculas.setColumns(10);
 		
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String valor = textFBusquedaPeliculas.getText();
+				bd.tabla = "peliculas";
+				bd.campo = "Titulo";
+				bd.valor = valor;
+				System.out.println(bd.tabla+" ,"+bd.campo+", "+bd.valor);
+			ResultSet rs =	bd.buscar();
+			try {
+				datosTablaPelicula(rs);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
+		});
 		
 		
 		
@@ -1575,7 +1626,27 @@ public class VAdministrador extends JFrame {
 		 
 	}
 
-
+	private void datosTablaPelicula(ResultSet rs) throws SQLException {
+		for(int i = (modelo.getRowCount()-1); i>=0;i--){
+			modelo.removeRow(i);
+			} 
+		
+		while(rs.next()){
+			 Object [] fila = new Object[6];
+			 
+			 		fila[0] = rs.getString("IDPelicula");
+	 				fila[1] = rs.getString("Titulo");
+	 				fila[2] = rs.getString("Genero");
+	 				fila[3] = rs.getString("Director");
+	 				fila[4] = rs.getString("Sinopsis");
+	 				fila[5] = rs.getDate("Estreno");
+			 
+			 modelo.addRow ( fila );
+			 
+			 
+		 }
+		 
+	}
 	private void datosTablaPelicula(BBDD bd, Pelicula pelicula,JComboBox cBGeneros, JTextArea textArea, JDateChooser dateChooser ) throws SQLException {
 		for(int i = (modelo.getRowCount()-1); i>=0;i--){
 		modelo.removeRow(i);
@@ -1682,10 +1753,7 @@ public class VAdministrador extends JFrame {
 			textField_4.setColumns(10);
 			
 			JButton btnBuscar_1 = new JButton("Buscar");
-			btnBuscar_1.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
+			
 			btnBuscar_1.setBounds(23, 239, 89, 23);
 			panelSalas.add(btnBuscar_1);
 			
@@ -1693,6 +1761,22 @@ public class VAdministrador extends JFrame {
 			textField_5.setBounds(122, 240, 153, 20);
 			panelSalas.add(textField_5);
 			textField_5.setColumns(10);
+			
+			btnBuscar_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String valor = textField_5.getText();
+					bd.campo = "Nombre";
+					bd.tabla ="salas";
+					bd.valor = valor;
+				ResultSet rs =	bd.buscar();
+				try {
+					datosTablaSalas(rs);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				}
+			});
 			
 			JButton btnAadir_1 = new JButton("A\u00F1adir");
 			btnAadir_1.addActionListener(new ActionListener() {
@@ -1825,4 +1909,30 @@ public class VAdministrador extends JFrame {
 			 		
 			 	}});
 	}
+
+	private void datosTablaSalas(ResultSet rs) throws SQLException {
+		for(int i = (modelo2.getRowCount()-1); i>=0;i--){
+			modelo2.removeRow(i);
+			} 
+		
+		while(rs.next()){
+			 Object [] fila = new Object[6];
+			 
+			 fila[0] = rs.getString("IDSalas");
+				fila[1] = rs.getString("Nombre");
+				fila[2] = rs.getString("Filas");
+				fila[3] = rs.getString("Columnas");
+				fila[4] = rs.getString("Audio");
+				fila[5] = rs.getString("Video");
+			 
+			 modelo2.addRow ( fila );
+			 
+			 
+		 }
+		 
+	}
 }
+
+
+
+
