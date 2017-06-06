@@ -1,4 +1,5 @@
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ControlErrores {
@@ -21,6 +22,7 @@ public class ControlErrores {
 		//Compara dos fechas y dice cuantos dias meses y años hay entre una y otra.
 		//Comprueba dirección de correo solo gmail.com y hotmail.com
 		//Devuelve el numero de dias de un mes dependiendo del año
+		
 	}
 	
 	//Comprueba si el string introducido es un Entero	
@@ -602,6 +604,380 @@ public class ControlErrores {
 		}
 		
 		
+		//Devuelve el día de la semana
+		public String DiasSemana(int dia, int mes,int ano){
+			String diaSemana=null;
+			int D=26, M=8, A=1984, A1=84, a=0, b=0, c=0, d=0, e=0;
+			
+			A1=ano%100;
+			A=ano;
+			M=mes;
+			D=dia;
+			
+			System.out.println("dia que me envia"+dia);
+			System.out.println("dia que me envia"+mes);
+			System.out.println("dia que me envia"+ano);
+			if(A>1699 && A<1800) {
+				
+				a=5;
+			}else if(A>1799 && A<1900) {
+				a=3;
+				
+			}else if(A>1899 && A<2000) {
+				
+				a=1;
+				
+			}else if(A>1999 && A<2100) {
+				a=0;
+				
+			}else if(A>2099 && A<2200) {
+				
+				a=-2;
+			}else if(A>2199 && A<2300) {
+				
+				a=-4;
+				
+			}
+			
+			
+			b=A1+(A1/4);
+			
+			
+			boolean bisiesto=false;
+			
+			if((A%4)==0){
+				
+				if((A%100)==0){
+					
+					
+					if((A%400)==0){
+						
+						//Es numero bisiesto
+						bisiesto=true;
+					}else {
+						
+						//No es numero bisiesto
+						bisiesto=false;
+					}
+					
+				}else {
+					
+					//Es numero bisiesto
+					bisiesto=true;
+				}
+				
+			}else {
+				//No es bisiesto
+				bisiesto=false;
+			}
+			
+			if(bisiesto && (M==1||M==2)){
+				
+				
+				c=-1;
+				
+			}else {
+				
+				c=0;
+				
+			}
+			
+			
+			switch(M){
+			
+			case 1:
+				d=6;
+				break;
+			case 2:
+				d=2;
+				break;
+			case 3:
+				d=2;
+				break;
+			case 4:
+				d=5;
+				break;
+			case 5:
+				d=0;
+				break;
+			case 6:
+				d=3;
+				break;
+			case 7:
+				d=5;
+				break;
+			case 8:
+				d=1;
+				break;
+			case 9:
+				d=4;
+				break;
+			case 10:
+				d=6;
+				break;
+			case 11:
+				d=2;
+				break;
+			case 12:
+				d=4;
+				break;
+			}
+			
+			
+			
+			e=D;
+			
+			a=a+b+c+d+e;
+			
+			while (a>7){
+				
+				a=a-7;
+				
+			}
+			
+			switch (a){
+			
+			case 1:
+				
+				diaSemana="L";
+				
+				break;
+			case 2:
+				
+				diaSemana="M";
+				
+				break;
+			case 3:
+				
+				diaSemana="X";
+				
+				break;
+			case 4:
+				
+				diaSemana="J";
+				
+				break;
+			case 5:
+				
+				diaSemana="V";
+				
+				break;
+			case 6:
+				
+				diaSemana="S";
+				
+				break;
+			case 7:
+				
+				diaSemana="D";
+				
+				break;
+			
+			}
+			System.out.println("Mi DIA "+diaSemana);
+			
+			return diaSemana;
+			
+		}
 		
+		//Cambio de formato por ejemplo de 01Ene2017 a 01/01/2017
+		public String camFormat1 (String diaIn, String mesIn, String anoIn) {
 
-}
+			int mes=0;
+			String fechaOu="";
+
+			String[] meses ={"Ene", "Feb", "Mar", "Abri", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+
+			for(int i=0; i<meses.length; i++) {
+
+				if(mesIn.equals(meses[i])){
+
+					mes=i+1;
+					
+				}
+
+			}
+			
+			if(mes<10) {fechaOu=diaIn+"/0"+mes+"/"+anoIn;} else {fechaOu=diaIn+"/"+mes+"/"+anoIn;}
+			
+			return fechaOu;
+
+		}
+
+
+
+		//Cambio de formato por ejemplo de 01/01/2017 a 01Ene2017
+		public String[] camFormat2 (String fechaIn) {
+
+			int mes;
+			String [] fechaOu=  fechaIn.split("/");
+
+			String[] meses ={"Ene", "Feb", "Mar", "Abri", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
+
+			fechaOu[1]= meses[Integer.parseInt(fechaOu[1])-1];
+			
+			return fechaOu;
+
+		}
+
+		//Cambio de formato por ejemplo de 01/02/2017 a 2017-02-01
+		public String camFormat3 (String fechaIn) {
+
+			String fechaOu;
+
+			String [] div = fechaIn.split("/");
+			
+			fechaOu=div[2]+"-"+div[1]+"-"+div[0];
+			
+			return fechaOu;
+
+		}
+		
+		
+		//Lo pasamos en formato dd/mm/aaaa me va a devolver un array con los días disponibles.
+				public ArrayList<String> limitDias(String fecha , String fechaMin, String fechaMax){
+					
+					ArrayList <String> dias = new ArrayList<String>();
+					int dia= Integer.parseInt(fecha.substring(0, 2));
+					int diaMin=Integer.parseInt(fechaMin.substring(0, 2));
+					int diaMax=Integer.parseInt(fechaMax.substring(0, 2));
+					
+					
+					
+					int diasMes= diasMes(Integer.parseInt(fecha.substring(6,10)), Integer.parseInt(fecha.substring(3,5)));
+					
+					
+					
+					for(int i=1; i<=diasMes; i++){
+						
+						if(i<10){
+							
+							dias.add("0"+i);
+						}else {
+							
+							dias.add(""+i);
+						}
+						
+						
+						
+					}
+					
+					if(Integer.parseInt(fecha.substring(3,5))==Integer.parseInt(fechaMin.substring(3,5)) && Integer.parseInt(fecha.substring(6,10))==Integer.parseInt(fechaMin.substring(6,10))){
+						
+							for(int i=0; i<diaMin-1; i++){
+								
+								dias.remove(0);
+								
+						}
+						
+					}
+					
+					
+					
+					if(Integer.parseInt(fecha.substring(3,5))==Integer.parseInt(fechaMax.substring(3,5)) && Integer.parseInt(fecha.substring(6,10))==Integer.parseInt(fechaMax.substring(6,10))){
+						
+						for(int i=0; i<dias.size(); i++){
+							
+							if(Integer.parseInt(dias.get(i))>diaMax){
+								
+								
+								dias.remove(i);
+								i--;
+								
+							}
+							
+							
+						}
+						
+						
+						
+					
+					}
+					
+					
+					
+							
+					return dias;
+				}
+				
+				
+				//Lo pasamos en formato dd/mm/aaaa me va a devolver un array con los meses disponibles.
+						public ArrayList<String> limitMeses(String fecha, String fechaMin, String fechaMax){
+							
+							ArrayList <String> meses = new ArrayList<String>();
+							int mes= Integer.parseInt(fecha.substring(3, 5));
+							int mesMin=Integer.parseInt(fechaMin.substring(3, 5));
+							int mesMax=Integer.parseInt(fechaMax.substring(3, 5));
+							
+							meses.add("Ene");
+							meses.add("Feb");
+							meses.add("Mar");
+							meses.add("Abr");
+							meses.add("May");
+							meses.add("Jun");
+							meses.add("Jul");
+							meses.add("Ago");
+							meses.add("Sep");
+							meses.add("Oct");
+							meses.add("Nov");
+							meses.add("Dic");
+								
+							String[] mesesFijo= {"Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"};	
+								
+							
+							
+							if( Integer.parseInt(fecha.substring(6,10))==Integer.parseInt(fechaMin.substring(6,10))){
+								
+									for(int i=0; i<mesMin-1; i++){
+										
+										meses.remove(0);
+										
+								}
+								
+							}
+							
+							
+							
+							if(Integer.parseInt(fecha.substring(6,10))==Integer.parseInt(fechaMax.substring(6,10))){
+								
+								System.out.println("entra");
+								
+									for(int i=0; i<mesesFijo.length; i++){
+									
+									if(i+1>mesMax){
+										
+										for(int e=0; e<meses.size(); e++)	{
+											
+											if(mesesFijo[i].equals(meses.get(e))){
+												
+												
+												meses.remove(e);
+												
+											}
+											
+										}
+										
+										
+									}
+									
+									
+								}
+								
+								
+								
+							
+							}
+								
+								
+							
+							
+							return meses;
+						}
+				
+				
+				
+				
+				
+				
+
+		}

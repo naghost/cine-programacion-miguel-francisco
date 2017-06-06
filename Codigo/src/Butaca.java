@@ -12,11 +12,6 @@ public class Butaca {
 		this.c = c;
 	}
 
-
-
-	
-
-
 	/**
 	 * @return the x
 	 */
@@ -45,15 +40,12 @@ public class Butaca {
 		this.y = y;
 	}
 
-
-
 	/**
 	 * @return the estado
 	 */
 	public int getEstado() {
 		return estado;
 	}
-
 
 
 	/**
@@ -64,20 +56,12 @@ public class Butaca {
 	}
 
 
-
-
-
-
 	/**
 	 * @return the f
 	 */
 	public int getF() {
 		return f;
 	}
-
-
-
-
 
 
 	/**
@@ -87,22 +71,12 @@ public class Butaca {
 		this.f = f;
 	}
 
-
-
-
-
-
 	/**
 	 * @return the c
 	 */
 	public int getC() {
 		return c;
 	}
-
-
-
-
-
 
 	/**
 	 * @param c the c to set

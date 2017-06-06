@@ -47,7 +47,7 @@ public class V1Taquillero extends JFrame {
 	private JScrollPane scrollPaneTableEntradas;
 	private ArrayList <Sala> datosSala= new ArrayList<Sala>();
 	private int idEmp=0;
-	private Bbdd bd= new Bbdd();
+	private BBDD bd = null;
 	
 	
 	public V1Taquillero(int idEmp)  {

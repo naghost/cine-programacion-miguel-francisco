@@ -39,7 +39,7 @@ public class V3Taquillero extends JFrame {
 	private DefaultTableModel modelo;
 	private JTable tableEntradas;
 	private JScrollPane scrollPaneTableEntradas;
-	private Bbdd bd= new Bbdd();
+	private BBDD bd= null;
 	private String consulta="";
 	private ControlErrores ce= new ControlErrores();
 	private String fechaSQL="";
@@ -79,7 +79,7 @@ public class V3Taquillero extends JFrame {
 		}
 		
 		
-		fechaSQL=ce.camFormat3(hora.substring(6,16));
+		//fechaSQL=ce.camFormat3(hora.substring(6,16));
 		int dia = Integer.parseInt(hora.substring(6,8));
 		int mes = Integer.parseInt(hora.substring(9,11));
 		int ano = Integer.parseInt(hora.substring(12,16));

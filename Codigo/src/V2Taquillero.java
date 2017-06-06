@@ -28,7 +28,7 @@ public class V2Taquillero extends JFrame {
 	private int sesion=0;
 	private ArrayList<Butaca> butacas = new ArrayList<Butaca>();
 	private final JButton btnNewButton = new JButton("New button");
-	private Bbdd bd= new Bbdd();
+	private BBDD bd= null;
 	private String consulta="";
 	private int idEmp=0;
 	/**

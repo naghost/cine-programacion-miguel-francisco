@@ -23,7 +23,7 @@ public class VControlAcceso extends JFrame {
 	public String consulta="";
 	//0 primer paso, 1 pedirle nueva contraseña, 2 pedirle contraseña y compararla
 	public int proceso=0;
-	private Bbdd bd= new Bbdd();
+	private BBDD bd= null;
 	private ResultSet contiene=null;
 
 		/**
@@ -66,7 +66,7 @@ public class VControlAcceso extends JFrame {
 		contentPane.add(tclave);
 		tclave.setColumns(10);
 		
-		Bd baseD = new Bd();
+		
 		
 		JButton bAceptarAcceso = new JButton("Aceptar");
 		bAceptarAcceso.addActionListener(new ActionListener() {
@@ -132,7 +132,7 @@ public class VControlAcceso extends JFrame {
 								if(contiene.getString("Puesto").equals("Administrador")) {
 									
 									
-									VAdministrador va = new VAdministrador();
+									VAdministrador va = new VAdministrador(bd);
 									va.setVisible(true);
 									JOptionPane.showMessageDialog(null, "Bienvenido señor administrador "+ tusuario.getText());
 									

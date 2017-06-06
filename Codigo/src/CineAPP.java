@@ -9,7 +9,7 @@ public class CineAPP {
 		
 	
 		BBDD bd = new BBDD();
-		VAdministrador iniciar = new VAdministrador(bd);
+		VControlAcceso iniciar = new VControlAcceso();
 		iniciar.setVisible(true);
 		
 	
