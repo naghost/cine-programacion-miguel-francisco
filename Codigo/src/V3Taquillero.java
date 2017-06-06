@@ -39,7 +39,7 @@ public class V3Taquillero extends JFrame {
 	private DefaultTableModel modelo;
 	private JTable tableEntradas;
 	private JScrollPane scrollPaneTableEntradas;
-	private BBDD bd= null;
+	
 	private String consulta="";
 	private ControlErrores ce= new ControlErrores();
 	private String fechaSQL="";
@@ -61,7 +61,7 @@ public class V3Taquillero extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public V3Taquillero(Entrada[] entradas, String pelicula, String hora) {
+	public V3Taquillero(Entrada[] entradas, String pelicula, String hora, BBDD bd) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(340, 100, 680, 579);
 		contentPane = new JPanel();
@@ -384,7 +384,7 @@ public class V3Taquillero extends JFrame {
 				
 				JOptionPane.showMessageDialog(null, "La operación se ha realizado con exito");
 				
-				V1Taquillero vt= new V1Taquillero(entradas[0].getIDEmpleado());
+				V1Taquillero vt= new V1Taquillero(entradas[0].getIDEmpleado(), bd);
 				vt.setVisible(true);
 				dispose();
 				
@@ -398,7 +398,7 @@ public class V3Taquillero extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 		 		
 			JOptionPane.showMessageDialog(null, "La operación ha sido cancelada!!");
-		 		V1Taquillero vt= new V1Taquillero(entradas[0].getIDEmpleado());
+		 		V1Taquillero vt= new V1Taquillero(entradas[0].getIDEmpleado(), bd);
 				vt.setVisible(true);
 				dispose();
 		 	}

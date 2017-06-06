@@ -28,7 +28,7 @@ public class V2Taquillero extends JFrame {
 	private int sesion=0;
 	private ArrayList<Butaca> butacas = new ArrayList<Butaca>();
 	private final JButton btnNewButton = new JButton("New button");
-	private BBDD bd= null;
+	
 	private String consulta="";
 	private int idEmp=0;
 	/**
@@ -38,7 +38,7 @@ public class V2Taquillero extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public V2Taquillero(int IdEmp, String sesionE, String pelicula, String sala, String hora) {
+	public V2Taquillero(int IdEmp, String sesionE, String pelicula, String sala, String hora, BBDD bd) {
 		this.sesion=Integer.parseInt(sesionE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(340, 100, 680, 579);
@@ -160,7 +160,7 @@ public class V2Taquillero extends JFrame {
 					
 					}
 				
-					V3Taquillero vt= new V3Taquillero(entradas, pelicula, hora);
+					V3Taquillero vt= new V3Taquillero(entradas, pelicula, hora, bd);
 					vt.setVisible(true);
 					dispose();
 				} else {
@@ -180,7 +180,7 @@ public class V2Taquillero extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				JOptionPane.showMessageDialog(null, "La operación ha sido cancelada");
-				V1Taquillero atras = new V1Taquillero(idEmp);
+				V1Taquillero atras = new V1Taquillero(idEmp, bd);
 				atras.setVisible(true);
 				dispose();
 				

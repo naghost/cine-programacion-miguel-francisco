@@ -47,10 +47,10 @@ public class V1Taquillero extends JFrame {
 	private JScrollPane scrollPaneTableEntradas;
 	private ArrayList <Sala> datosSala= new ArrayList<Sala>();
 	private int idEmp=0;
-	private BBDD bd = null;
 	
 	
-	public V1Taquillero(int idEmp)  {
+	
+	public V1Taquillero(int idEmp, BBDD bd)  {
 		
 		this.idEmp=idEmp;
 		System.out.println(idEmp+ " ES EMPLEADO");
@@ -127,7 +127,7 @@ public class V1Taquillero extends JFrame {
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				datosTabla(tFPelicula.getText().toString(),tFSesion.getText().toString(),tFSala.getText().toString());
+				datosTabla(tFPelicula.getText().toString(),tFSesion.getText().toString(),tFSala.getText().toString(), bd);
 							
 			}
 		});
@@ -199,7 +199,7 @@ public class V1Taquillero extends JFrame {
 			 		
 			 		
 			 		
-			 		V2Taquillero vt= new V2Taquillero(idEmp, String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),0)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),1)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),2)), String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),4))+" "+String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),3)));
+			 		V2Taquillero vt= new V2Taquillero(idEmp, String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),0)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),1)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),2)), String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),4))+" "+String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),3)), bd);
 					
 					vt.setVisible(true);
 					
@@ -214,7 +214,7 @@ public class V1Taquillero extends JFrame {
 		
 			
 	
-	public void datosTabla(String pel, String ses, String sala){
+	public void datosTabla(String pel, String ses, String sala, BBDD bd){
 		
 		vaciarTabla();
 		

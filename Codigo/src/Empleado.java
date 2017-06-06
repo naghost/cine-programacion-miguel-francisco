@@ -16,7 +16,6 @@ public class Empleado extends Usuario {
 
 
 
-	@Override
 	public boolean comprobarDni() {
 		// TODO Auto-generated method stub
 		// Array con las letras posibles del dni en su posición

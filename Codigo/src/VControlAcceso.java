@@ -23,13 +23,13 @@ public class VControlAcceso extends JFrame {
 	public String consulta="";
 	//0 primer paso, 1 pedirle nueva contraseña, 2 pedirle contraseña y compararla
 	public int proceso=0;
-	private BBDD bd= null;
+
 	private ResultSet contiene=null;
 
 		/**
 	 * Create the frame.
 	 */
-	public VControlAcceso() {
+	public VControlAcceso(BBDD bd) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(370, 100, 450, 300);
 		contentPane = new JPanel();
@@ -73,10 +73,10 @@ public class VControlAcceso extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				if(proceso==0){		
-					if(tusuario.getText().equals("") && !tclave.getText().equals("")) {
+					if(tclave.getText().equals("x") && !tclave.getText().equals("")) {
 					
 						
-						consulta="SELECT * FROM empleados WHERE IDEmpleado='"+tclave.getText().toString()+"'";
+						consulta="SELECT * FROM empleados WHERE IDEmpleado="+tusuario.getText().toString();
 						bd.Conexion();
 						contiene=bd.seleccionar(consulta);
 					
@@ -142,7 +142,7 @@ public class VControlAcceso extends JFrame {
 								} else {
 									
 									id=Integer.parseInt(contiene.getString("IDEmpleado"));
-									V1Taquillero vt = new V1Taquillero(id);
+									V1Taquillero vt = new V1Taquillero(id, bd);
 									vt.setVisible(true);
 									JOptionPane.showMessageDialog(null, "Bienvenido señor Vendedor "+ tusuario.getText());
 									dispose();
