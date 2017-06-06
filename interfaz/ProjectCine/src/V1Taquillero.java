@@ -1,11 +1,18 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -13,43 +20,40 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import com.toedter.calendar.JDateChooser;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 
 public class V1Taquillero extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private boolean control=true;
+	private JTextField tFPelicula;
+	private JTextField tFSesion;
+	private JTextField tFSala;
+	private JDateChooser dateChooser;
+	private java.text.SimpleDateFormat formatFechaSQL;
+	private String fechaMin="", fechaMax="";
 	private DefaultTableModel modelo;
 	private JTable tableEntradas;
 	private JScrollPane scrollPaneTableEntradas;
 	private ArrayList <Sala> datosSala= new ArrayList<Sala>();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					V1Taquillero frame = new V1Taquillero();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public V1Taquillero() {
+	private int idEmp=0;
+	private Bbdd bd= new Bbdd();
+	
+	
+	public V1Taquillero(int idEmp)  {
+		
+		this.idEmp=idEmp;
+		System.out.println(idEmp+ " ES EMPLEADO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(340, 100, 680, 579);
 		contentPane = new JPanel();
@@ -61,144 +65,118 @@ public class V1Taquillero extends JFrame {
 		lblPelicula.setBounds(26, 27, 57, 14);
 		contentPane.add(lblPelicula);
 		
-		textField = new JTextField();
-		textField.setBounds(93, 24, 143, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		tFPelicula = new JTextField();
+		tFPelicula.setBounds(93, 24, 143, 20);
+		contentPane.add(tFPelicula);
+		tFPelicula.setColumns(10);
 		
 		JLabel lblSesin = new JLabel("Sesi\u00F3n");
 		lblSesin.setBounds(26, 72, 46, 14);
 		contentPane.add(lblSesin);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(93, 69, 143, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		tFSesion = new JTextField();
+		tFSesion.setBounds(93, 69, 143, 20);
+		contentPane.add(tFSesion);
+		tFSesion.setColumns(10);
 		
 		JLabel lblSala = new JLabel("Sala");
 		lblSala.setBounds(26, 115, 46, 14);
 		contentPane.add(lblSala);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(93, 112, 143, 20);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
+		tFSala = new JTextField();
+		tFSala.setBounds(93, 112, 143, 20);
+		contentPane.add(tFSala);
+		tFSala.setColumns(10);
 		
-		JLabel lblFechaFin = new JLabel("Fecha ");
-		lblFechaFin.setBounds(381, 27, 53, 14);
-		contentPane.add(lblFechaFin);
+		dateChooser = new JDateChooser();
+		dateChooser.setBounds(525, 27, 95, 20);
+		contentPane.add(dateChooser);
 		
-		JComboBox diaFFSesion = new JComboBox();
-		diaFFSesion.setBounds(444, 24, 46, 20);
-		contentPane.add(diaFFSesion);
+		//Cambia formato de fecha
+		dateChooser.setDateFormatString("dd/MM/yyyy");
+		//Coloca una fecha por defecto	
+		dateChooser.setDate(Calendar.getInstance().getTime());
+		//dateChooser.setMinSelectableDate(Calendar.getInstance().getTime());
 		
-		for(int i=1; i<=31; i++){
-			
-			
-			diaFFSesion.addItem(i);
-		}
+		formatFechaSQL = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		fechaMin=formatFechaSQL.format(dateChooser.getDate().getTime());
+		fechaMax=fechaMin+" 23:59:59";
+		fechaMin=fechaMin+" 00:00:00";
 		
-		String [] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
 		
-		JComboBox mesFFSesion = new JComboBox(meses);
-		mesFFSesion.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
+		
+		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) { 
+				
+				formatFechaSQL = new java.text.SimpleDateFormat("yyyy-MM-dd");
+				fechaMin=formatFechaSQL.format(dateChooser.getDate().getTime());
+				fechaMax=fechaMin+" 23:59:59";
+				fechaMin=fechaMin+" 00:00:00";
+				
+				System.out.println(fechaMin+" "+fechaMax);
 				
 				
-				
-				if(control){
-					
-					control=false;
-				} else {
-					
-					control=true;
-				}
-				
-				if (control){
-				
-				System.out.println(diaFFSesion.getItemCount());
-				
-				//diaEstreno.removeAll();
-				
-				System.out.println(arg0.getItem().toString());
-				
-				if(arg0.getItem().equals("Feb")){
-					
-					
-					
-					if(diaFFSesion.getItemCount()==31) {
-						
-						diaFFSesion.removeItemAt(30);
-						diaFFSesion.removeItemAt(29);
-						
-					}
-					
-					if(diaFFSesion.getItemCount()==30) { 
-						
-						diaFFSesion.removeItemAt(29);
-					}
-					
-					
-				} else {
-					
-					if( arg0.getItem().equals("Ene") || arg0.getItem().equals("Mar") || arg0.getItem().equals("May") || arg0.getItem().equals("Jul") || arg0.getItem().equals("Ago") || arg0.getItem().equals("Oct") || arg0.getItem().equals("Dic")){
-						diaFFSesion.setSelectedItem(31);
-					
-					if(diaFFSesion.getItemCount()==29){
-						
-						diaFFSesion.addItem("30");
-						diaFFSesion.addItem("31");
-					} 
-					
-					if (diaFFSesion.getItemCount()==30){
-						
-						diaFFSesion.addItem("31");
-					}
-					
-					
-					
-					} else {
-						
-						if(diaFFSesion.getItemCount()==29){
-							
-							diaFFSesion.addItem("30");
-							
-						} 
-						
-						if (diaFFSesion.getItemCount()==31){
-							
-							diaFFSesion.removeItemAt(30);
-						}
-						
-						
-					}
-				}}
-			}
-		});
+			}});
 		
 		
-		mesFFSesion.setBounds(500, 24, 63, 20);
-		contentPane.add(mesFFSesion);
-		mesFFSesion.setSelectedIndex(2);
-		
-		String [] anos = {"2017", "2018", "2019", "2020"};
-		
-		JComboBox anoFFSesion = new JComboBox(anos);
-		anoFFSesion.setBounds(573, 24, 53, 20);
-		contentPane.add(anoFFSesion);
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.setBounds(438, 111, 89, 23);
 		contentPane.add(btnBuscar);
 		
-		modelo = new DefaultTableModel();
-		 tableEntradas = new JTable(modelo/*data1, columnNames*/);
-		 modelo.addColumn("Id Sesión");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				datosTabla(tFPelicula.getText().toString(),tFSesion.getText().toString(),tFSala.getText().toString());
+							
+			}
+		});
+		
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(537, 111, 89, 23);
+		contentPane.add(btnCancelar);
+		
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+							
+			}
+		});
+		
+		 modelo = new DefaultTableModel();
+		 tableEntradas = new JTable(modelo);
+		 modelo.addColumn("Id");
 		 modelo.addColumn("Pelicula");
 		 modelo.addColumn("Sala");
 		 modelo.addColumn("Fecha");
 		 modelo.addColumn("Hora");
 		 modelo.addColumn("Precio");
+		 
+		 TableColumn columna1 = tableEntradas.getColumn("Id");
+		  columna1.setMaxWidth(60);
+		  columna1.setCellRenderer(centrarCell());
+		  
+		  TableColumn columna2 = tableEntradas.getColumn("Pelicula");
+		  columna2.setMaxWidth(250);
+		  columna2.setCellRenderer(centrarCell());
+		  
+		  TableColumn columna3 = tableEntradas.getColumn("Sala");
+		  columna3.setMaxWidth(60);
+		  columna3.setCellRenderer(centrarCell());
+		  
+		  TableColumn columna4 = tableEntradas.getColumn("Fecha");
+		  columna4.setMaxWidth(100);
+		  columna4.setCellRenderer(centrarCell());
+		  
+		  TableColumn columna5 = tableEntradas.getColumn("Hora");
+		  columna5.setMaxWidth(80);
+		  columna5.setCellRenderer(centrarCell());
+		  
+		  TableColumn columna6 = tableEntradas.getColumn("Precio");
+		  columna6.setMaxWidth(90);
+		  columna6.setCellRenderer(centrarCell());
 		 
 		 tableEntradas .setPreferredScrollableViewportSize(new Dimension(400, 200));
 		 scrollPaneTableEntradas = new JScrollPane(tableEntradas );
@@ -211,44 +189,17 @@ public class V1Taquillero extends JFrame {
 		 scrollPane.setBounds(381, 157, -133, -78);
 		 contentPane .add(scrollPane);
 		 
-		 JButton btnCancelar = new JButton("Cancelar");
-		 btnCancelar.setBounds(537, 111, 89, 23);
-		 contentPane.add(btnCancelar);
-		 
-		 
-		 //cargamos datos
-		 for(int i=0; i<18; i++){
-			 
-			 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-			 
-			 
-		 }
-		 
+		 		 
 		
-		 for(int i=0; i<datosSala.size(); i++){
-			 
-			 Object [] fila = new Object[5];
-			 
-			 fila[0] = datosSala.get(i).getIdSala();
-			 fila[1] = datosSala.get(i).getFilas();
-			 fila[2] = datosSala.get(i).getColumnas();
-			 fila[3] = datosSala.get(i).getAudio();
-			 fila[4] = datosSala.get(i).getVideo();
-			 
-			 modelo.addRow ( fila );
-			 
-		 }
-		 
-		 
+		
+		 		 
 		 tableEntradas .addMouseListener(new MouseAdapter() {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
 			 		
 			 		
 			 		
-			 		System.out.println(tableEntradas .rowAtPoint(arg0.getPoint()));	
-			 		
-			 		V2Taquillero vt= new V2Taquillero("Chapolin Colorado");
+			 		V2Taquillero vt= new V2Taquillero(idEmp, String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),0)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),1)),String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),2)), String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),4))+" "+String.valueOf(modelo.getValueAt(tableEntradas.rowAtPoint(arg0.getPoint()),3)));
 					
 					vt.setVisible(true);
 					
@@ -257,4 +208,100 @@ public class V1Taquillero extends JFrame {
 			 		
 			 	}});
 	}
+	
+	
+		
+		
+			
+	
+	public void datosTabla(String pel, String ses, String sala){
+		
+		vaciarTabla();
+		
+		String consulta="SELECT se.IDSesion, pe.Titulo, se.IDPelicula, se.IDSala, pr.Precio, se.FechaHora FROM sesiones se INNER JOIN peliculas pe INNER JOIN precios pr WHERE se.IDPelicula=pe.IDPelicula AND se.IDPrecio=pr.IDPrecio AND se.FechaHora>='"/*+ce.camFormat3(ce.camFormat1(diaFFSesion.getSelectedItem().toString(), mesFFSesion.getSelectedItem().toString(), anoFFSesion.getSelectedItem().toString()))+" 00:00:00'*/+fechaMin+"' AND se.FechaHora<='"+fechaMax+"'";/*+ce.camFormat3(ce.camFormat1(diaFFSesion.getSelectedItem().toString(), mesFFSesion.getSelectedItem().toString(), anoFFSesion.getSelectedItem().toString()))+" 23:59:59'";*/
+		
+		
+		bd.Conexion();
+		
+		if(!pel.equals("")){
+			
+			consulta+="AND pe.Titulo='"+ pel+"'";
+			
+		}
+		
+		if(!ses.equals("")) {
+			
+			consulta+="AND se.IDSesion='"+ ses+"'";
+		}
+		
+		if(!sala.equals("")) {
+			
+			consulta+="AND se.IDSala='"+ sala+"'";
+		}
+		
+		ResultSet contenido= bd.seleccionar(consulta);
+		
+				
+	try {	
+		
+		contenido.last();
+		
+		if(contenido.getRow()>0) {
+		
+		contenido.first();
+		
+			do {
+			
+			 
+				Object [] fila = new Object[6];
+			 
+			 
+			 
+				 fila[0]=contenido.getString("IDSesion");
+				 fila[1] = contenido.getString("Titulo");
+				 fila[2] = contenido.getString("IDSala"); 
+				 String fechHor [] =  contenido.getString("FechaHora").split(" ");
+				 String [] fecha = fechHor[0].split("-");
+				 String hora = fechHor[1].substring(0, 5);
+				 fila[3] = fecha[2]+"/"+fecha[1]+"/"+fecha[0];
+				 fila[4] = hora;
+				 fila[5] = contenido.getString("Precio")+" $";
+			 			 
+				 	modelo.addRow ( fila );
+			 
+			
+			}while(contenido.next());
+		} else {
+			
+			JOptionPane.showMessageDialog(null, "No se han encontrado resultados!!");
+			
+		}
+	} 
+	
+	catch(Exception e){
+			 
+		 System.out.println("Error");
+	 }
+		
+				
+	}
+	
+	public void vaciarTabla(){
+		
+		for(int i=modelo.getRowCount()-1; i>=0; i--) {
+			
+			modelo.removeRow(i);
+					
+		}	
+	}
+	
+	public DefaultTableCellRenderer centrarCell(){
+	
+	DefaultTableCellRenderer modelocentrar = new DefaultTableCellRenderer();
+    modelocentrar.setHorizontalAlignment(SwingConstants.CENTER);
+
+    return modelocentrar; 
+    
+	}
 }
+ 
