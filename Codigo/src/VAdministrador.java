@@ -5,10 +5,13 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -1140,20 +1143,35 @@ public class VAdministrador extends JFrame {
 		lblFechaIncio.setBounds(302, 34, 68, 14);
 		panelSesiones.add(lblFechaIncio);
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(384, 78, 203, 22);
-		panelSesiones.add(dateChooser);
+		JDateChooser dateChooser_1 = new JDateChooser();
+		dateChooser_1.setBounds(384, 34, 203, 22);
+		panelSesiones.add(dateChooser_1);
+
 		
+		Date min = Calendar.getInstance().getTime();
+		dateChooser_1.setMinSelectableDate(min);
 		
+	
+		
+		Date min2 = dateChooser_1.getDate();
 		
 		JLabel lblFechaFin = new JLabel("Fecha Fin");
 		lblFechaFin.setBounds(302, 78, 53, 14);
 		panelSesiones.add(lblFechaFin);
 		
-		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.setBounds(384, 34, 203, 22);
-		panelSesiones.add(dateChooser_1);
-
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(384, 78, 203, 22);
+		panelSesiones.add(dateChooser);
+		
+		dateChooser.setMinSelectableDate(min2);
+		
+		 dateChooser_1.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) { 
+				
+				dateChooser.setMinSelectableDate( dateChooser_1.getDate());
+				
+			}});
+		
 		JRadioButton rdbtnL = new JRadioButton("L");
 		rdbtnL.setBounds(302, 117, 36, 23);
 		panelSesiones.add(rdbtnL);
