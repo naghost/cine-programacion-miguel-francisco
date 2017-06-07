@@ -124,36 +124,6 @@
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_4HG4BjfKEeeIrpGbC_iI1A" value="*"/>
     </ownedEnd>
   </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_9ToAMDfKEeeIrpGbC_iI1A" name="Pelicula">
-    <ownedAttribute xmi:id="_KnrQMDfLEeeIrpGbC_iI1A" name="Estreno">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_AWbp4DfLEeeIrpGbC_iI1A" name="Titulo">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_G3KzADfLEeeIrpGbC_iI1A" name="Genero">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_TN44EDfLEeeIrpGbC_iI1A" name="Director">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:id="_XU5JsDfLEeeIrpGbC_iI1A" name="Sinopsis">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-    </ownedAttribute>
-    <ownedOperation xmi:id="_cZHRgDfLEeeIrpGbC_iI1A" name="crearPelicula"/>
-    <ownedOperation xmi:id="_eOkXQDfLEeeIrpGbC_iI1A" name="borrarPelicula"/>
-    <ownedOperation xmi:id="_fvWNgDfLEeeIrpGbC_iI1A" name="modificarPelicula"/>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Association" xmi:id="_lzObgDfLEeeIrpGbC_iI1A" memberEnd="_lzObgTfLEeeIrpGbC_iI1A _lzObhDfLEeeIrpGbC_iI1A" navigableOwnedEnd="_lzObgTfLEeeIrpGbC_iI1A _lzObhDfLEeeIrpGbC_iI1A">
-    <ownedEnd xmi:id="_lzObgTfLEeeIrpGbC_iI1A" name="sesions" type="_AaLzYDfJEeeIrpGbC_iI1A" association="_lzObgDfLEeeIrpGbC_iI1A">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_lzObgjfLEeeIrpGbC_iI1A"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_lzObgzfLEeeIrpGbC_iI1A" value="*"/>
-    </ownedEnd>
-    <ownedEnd xmi:id="_lzObhDfLEeeIrpGbC_iI1A" name="peliculas" type="_9ToAMDfKEeeIrpGbC_iI1A" association="_lzObgDfLEeeIrpGbC_iI1A">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_lzObhTfLEeeIrpGbC_iI1A"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_lzObhjfLEeeIrpGbC_iI1A" value="*"/>
-    </ownedEnd>
-  </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_EvOZoDfMEeeIrpGbC_iI1A" name="Descuento">
     <ownedAttribute xmi:id="_00840DfMEeeIrpGbC_iI1A" name="nombreDescuento">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
