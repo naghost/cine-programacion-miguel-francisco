@@ -424,7 +424,7 @@ public class VAdministrador extends JFrame {
 					 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
 					 			
 					 		}
-			 				consulta="INSERT INTO empleados VALUES (null,'"+((Empleado)s).getNombre()+"', '"+((Empleado)s).getApellidos()+"','"+((Empleado)s).getDni()+"', 'x','"+((Empleado)s).getCategoria()+"' )";
+			 				consulta="INSERT INTO empleados VALUES (null,'"+((Empleado)s).getDni()+"', '"+((Empleado)s).getNombre()+"','"+((Empleado)s).getApellidos()+"', 'x','"+((Empleado)s).getCategoria()+"' )";
 			 				bd.insModEli(consulta);
 			 				bd.desconexion();
 			 				
@@ -2063,7 +2063,7 @@ public class VAdministrador extends JFrame {
 						}else JOptionPane.showMessageDialog(null, "No has seleccionado una pelicula","Resultado Operacion",JOptionPane.ERROR_MESSAGE);
 						
 						
-
+					datosTablaSesiones(panelSesiones, bd, sesiones);
 			}
 		});
 		btnInsertar.setBounds(294, 249, 89, 23);
@@ -2213,9 +2213,16 @@ public class VAdministrador extends JFrame {
 		lblSinopsis.setBounds(308, 62, 63, 14);
 		panelPeliculas.add(lblSinopsis);
 		
+		
+		
 		JTextArea textArea = new JTextArea();
-		textArea.setBounds(381, 57, 164, 102);
-		panelPeliculas.add(textArea);
+		textArea.setBounds(0, 0, 145, 105);
+		//textArea_1.setEditable(false);
+		textArea.setLineWrap(true); 
+		JScrollPane scroll = new JScrollPane(textArea);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setBounds(381, 57, 164, 102);
+		panelPeliculas.add(scroll);
 		
 		/*Fechas*/
 		JDateChooser dateChooser = new JDateChooser();
