@@ -424,7 +424,7 @@ public class VAdministrador extends JFrame {
 					 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
 					 			
 					 		}
-			 				consulta="INSERT INTO empleados VALUES (null,'"+((Empleado)s).getNombre()+"', '"+((Empleado)s).getApellidos()+"','"+((Empleado)s).getDni()+"', 'x','"+((Empleado)s).getCategoria()+"' )";
+			 				consulta="INSERT INTO empleados VALUES (null,'"+((Empleado)s).getDni()+"', '"+((Empleado)s).getNombre()+"','"+((Empleado)s).getApellidos()+"', 'x','"+((Empleado)s).getCategoria()+"' )";
 			 				bd.insModEli(consulta);
 			 				bd.desconexion();
 			 				
