@@ -134,20 +134,20 @@ public class Sesion {
 				int id2 = rs.getInt("IDSala");
 			
 				camp[0] = obtenerNombre(bd,  tabla, campo, id2,  auxcampo);
-				System.out.println(camp[0]+"capurron");
+				
 				auxcampo = "Titulo";
 				tabla = "peliculas";
  				campo = "IDPelicula";
  				id2 = rs.getInt("IDPelicula");
 				camp[1] = obtenerNombre(bd,  tabla, campo, id2,  auxcampo);
-				System.out.println(camp[1]+"capurron");
+				
 				auxcampo = "Nombre";
 				tabla = "precios";
  				campo = "IDPrecio";
  				id2 = rs.getInt("IDPrecio");
 				camp[2] = obtenerNombre(bd,  tabla, campo, id2,  auxcampo);
-				System.out.println(camp[2]+"capurron");
-				camp[3] = rs.getString("Fecha-hora");
+			
+				camp[3] = rs.getString("FechaHora");
 		}
 			int respuesta = JOptionPane.showConfirmDialog(null,"¿Estas seguro que quieres borrar el siguiente elemento? \n"+camp[0]+" "+camp[1]+" "+camp[2]+" "+camp[3],"Eliminar sesion",JOptionPane.YES_NO_OPTION);
 
