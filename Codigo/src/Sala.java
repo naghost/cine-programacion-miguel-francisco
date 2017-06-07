@@ -74,7 +74,6 @@ public class Sala {
 			if(respuesta == 0){
 				stmt = bd.conexion.createStatement();
 				stmt.execute("DELETE FROM Salas WHERE IDSalas="+idUsed_sala);
-				stmt.close();
 				JOptionPane.showMessageDialog(null, "Los cambios se han realizado");
 			}else{
 				JOptionPane.showMessageDialog(null, "No se han realizado los cambios");

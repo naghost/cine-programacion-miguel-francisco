@@ -67,7 +67,7 @@ public class Pelicula {
 			if(respuesta == 0){
 				stmt = bd.conexion.createStatement();
 				stmt.execute("DELETE FROM peliculas WHERE IDPelicula="+idUsed_peliculas);
-				stmt.close();
+				
 				
 			}else{
 				JOptionPane.showMessageDialog(null, "No se han realizado los cambios");

@@ -2095,7 +2095,11 @@ public class VAdministrador extends JFrame {
 
 
 	private void datosTablaSesiones(JPanel panelSesiones, BBDD bd, Sesion sesiones) {
+		
 		modelo3 = new DefaultTableModel();
+		for(int i = (modelo3.getRowCount()-1); i>=0;i--){
+			modelo3.removeRow(i);
+			} 
 		 tableSesiones = new JTable(modelo3/*data1, columnNames*/);
 		
 		 modelo3.addColumn("IDSesion");
@@ -2158,8 +2162,8 @@ public class VAdministrador extends JFrame {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
 			 					 		
-			 		idUsed_sesion =Integer.parseInt(String.valueOf(modelo3.getValueAt(tableSesiones.rowAtPoint(arg0.getPoint()), 0)));
-				
+			 		
+			 		idUsed_sesion = Integer.parseInt(String.valueOf(modelo3.getValueAt(tableSesiones.rowAtPoint(arg0.getPoint()), 0)));
 			 	}});
 	}
 
