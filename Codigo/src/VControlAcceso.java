@@ -73,10 +73,10 @@ public class VControlAcceso extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				if(proceso==0){		
-					if(tclave.getText().equals("x") && !tclave.getText().equals("")) {
+					if(tusuario.getText().equals("") && !tclave.getText().equals("")) {
 					
 						
-						consulta="SELECT * FROM empleados WHERE IDEmpleado="+tusuario.getText().toString();
+						consulta="SELECT * FROM empleados WHERE IDEmpleado='"+tclave.getText().toString()+"'";
 						bd.Conexion();
 						contiene=bd.seleccionar(consulta);
 					
