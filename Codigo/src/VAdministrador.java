@@ -199,7 +199,7 @@ public class VAdministrador extends JFrame {
 		Precios(pestana, bd);
 		
 		//Panel 6 de Entradas
-		 Entradas(pestana);
+		 Entradas(pestana, bd);
 		 
 		//Panel 7 de Pagos
 		 Pagos(pestana, bd);
@@ -984,83 +984,219 @@ public class VAdministrador extends JFrame {
 	}
 
 
-	private void Entradas(JTabbedPane pestana) {
+	private void Entradas(JTabbedPane pestana, BBDD bd) {
 		JPanel panelEntradas = new JPanel();
 		 pestana.addTab("Entradas", null, panelEntradas, null);
 		 panelEntradas.setLayout(null);
 		 
-		 JButton btnBuscar_4 = new JButton("Buscar");
-		 btnBuscar_4.addActionListener(new ActionListener() {
-		 	public void actionPerformed(ActionEvent e) {
-		 	}
-		 });
-		 btnBuscar_4.setBounds(73, 23, 89, 23);
-		 panelEntradas.add(btnBuscar_4);
-		 
-		 textField_15 = new JTextField();
-		 textField_15.setBounds(172, 24, 183, 20);
-		 panelEntradas.add(textField_15);
-		 textField_15.setColumns(10);
-		 
 		 JComboBox cBCamposEntradas = new JComboBox();
-			
-			
 		 cBCamposEntradas.setBounds(365, 24, 95, 20);
 			panelEntradas.add(cBCamposEntradas);
-			cBCamposEntradas.addItem("Pelicula");
-			cBCamposEntradas.addItem("Sala");
+			cBCamposEntradas.addItem("Entrada");
 			cBCamposEntradas.addItem("Sesion");
-			cBCamposEntradas.addItem("Socios");
-			
-			
-			modelo5 = new DefaultTableModel();
-			 tableEntradas = new JTable(modelo5/*data1, columnNames*/);
-			 modelo5.addColumn("Id");
-			 modelo5.addColumn("Filas");
-			 modelo5.addColumn("Columnas");
-			 modelo5.addColumn("Audio");
-			 modelo5.addColumn("Video");
+			cBCamposEntradas.addItem("Socio");
+			cBCamposEntradas.addItem("Empleado");
+			cBCamposEntradas.addItem("Descuento");
+			cBCamposEntradas.addItem("Suplemento");
+			cBCamposEntradas.addItem("Pago");
+		 
+		 JButton btnBuscarEntrada = new JButton("Buscar");
+		 btnBuscarEntrada.addActionListener(new ActionListener() {
+		 	public void actionPerformed(ActionEvent e) {
+		 		
+		 	
+				 VaciarTabla(modelTableEntradas);
+		 		
+		 		consulta="SELECT * FROM entradas ";
+		 		
+		 		if(!tFEntradas.getText().equals("")){
+		 			
+		 		switch(cBCamposEntradas.getSelectedItem().toString()){
+		 			
+		 			
+		 			case "Entrada":
+		 				
+		 				consulta=consulta+"WHERE IDEntrada=";
+		 				
+		 				break;
+		 			
+		 			case "Sesion":
+		 				
+		 				consulta=consulta+"WHERE IDSesion=";
+		 				
+		 				break;
+		 			case "Socio":
+		 				
+		 				consulta=consulta+"WHERE IDSocio=";
+		 				
+		 				break;
+		 			case "Empleado":
+		 				
+		 				consulta=consulta+"WHERE IDEmpleado=";
+		 				
+		 				break;
+		 			
+		 			case "Descuento":
+	 				
+		 				consulta=consulta+"WHERE IDDescuento=";
+	 				
+		 				break;
+	 				
+		 			case "Suplemento":
+		 				
+		 				consulta=consulta+"WHERE Suplemento=";
+		 				
+		 				break;
+		 			
+		 			
+		 			
+		 			case "Pago":
+	 				
+	 				consulta=consulta+"WHERE IDPago=";
+	 				
+	 				break;
+		 			
+	 			}
+		 			
+		 		consulta=consulta+"'"+tFEntradas.getText()+"'";
+		 			
+		 		}
+		 		
+		 					 		
+		 		if(bd.Conexion()==null) {
+		 			
+		 			JOptionPane.showMessageDialog(null, "La base de datos no esta conectada!!");
+		 			
+		 		}
+		 		contiene=bd.seleccionar(consulta);
+		 		
+		 		try {
+		 		
+		 		contiene.last();
+		 		
+		 		
+		 		
+		 		if(contiene.getRow()>0){
+		 			
+		 			contiene.first();
+		 			
+		 			do {
+		 				
+		 				 Object [] fila = new Object[10];
+						 
+						 fila[0]=contiene.getString("IDEntrada");
+						 fila[1] = contiene.getString("IDSesion");
+						 fila[2] = contiene.getString("IDSocio"); 
+						 fila[3] = contiene.getString("IDEmpleado");
+						 fila[4] = contiene.getString("IDDescuento");
+						 fila[5] = contiene.getString("IDPago");
+						 fila[6] = contiene.getString("Fila");
+						 fila[7] = contiene.getString("Columna");
+						 fila[8] = contiene.getString("Suplemento");
+						 fila[9] = contiene.getString("Precio");
+						 
+						 modelTableEntradas.addRow ( fila );
+						 
+											 				
+		 				
+		 				
+		 			} while(contiene.next());
+		 			
+		 		} else { JOptionPane.showMessageDialog(null, "No se han encontrado resultados!!");}
+		 		
+		 		
+		 		
+		 		} catch(Exception er){
+		 			
+		 			
+		 			
+		 		}}
+		 		
+		 	}
+		 );
+		 btnBuscarEntrada.setBounds(73, 23, 89, 23);
+		 panelEntradas.add(btnBuscarEntrada);
+		 
+		 tFEntradas = new JTextField();
+		 tFEntradas.setBounds(172, 24, 183, 20);
+		 panelEntradas.add(tFEntradas);
+		 tFEntradas.setColumns(10);
+		 
+		 tFEntradas.addKeyListener(new KeyAdapter(){
 			 
-			 tableEntradas .setPreferredScrollableViewportSize(new Dimension(400, 200));
-			 scrollPaneTableEntradas = new JScrollPane(tableEntradas );
-			 scrollPaneTableEntradas.setBounds(41, 77, 492, 408);
+				public void keyTyped(KeyEvent e) {
+					
+					if (tFEntradas.getText().length()== 30){
+					
+						e.consume();
+					}
+				    
+				}						 
+				
+			});
+		 
+		 
+			
+			
+			modelTableEntradas = new DefaultTableModel();
+			tableEntradas = new JTable(modelTableEntradas);
+			modelTableEntradas.addColumn("Id");
+			modelTableEntradas.addColumn("Sesión");
+			modelTableEntradas.addColumn("Id Socio");
+			modelTableEntradas.addColumn("Id Empleado");
+			modelTableEntradas.addColumn("Id Descuento");
+			modelTableEntradas.addColumn("Id Pago");
+			modelTableEntradas.addColumn("Fila");
+			modelTableEntradas.addColumn("Columna");
+			modelTableEntradas.addColumn("Suplemento");
+			modelTableEntradas.addColumn("Precio");
+			
+			TableColumn col1Entradas = tableEntradas.getColumn("Id");
+			col1Entradas.setMaxWidth(30);
+			col1Entradas.setCellRenderer(centrarCell());
+			TableColumn col2Entradas = tableEntradas.getColumn("Sesión");
+			col2Entradas.setMaxWidth(47);
+			col2Entradas.setCellRenderer(centrarCell());
+			TableColumn col3Entradas = tableEntradas.getColumn("Id Socio");
+			col3Entradas.setMaxWidth(50);
+			col3Entradas.setCellRenderer(centrarCell());
+			TableColumn col4Entradas = tableEntradas.getColumn("Id Empleado");
+			col4Entradas.setMaxWidth(90);
+			col4Entradas.setCellRenderer(centrarCell());
+			TableColumn col5Entradas = tableEntradas.getColumn("Id Descuento");
+			col5Entradas.setMaxWidth(95);
+			col5Entradas.setCellRenderer(centrarCell());
+			TableColumn col6Entradas = tableEntradas.getColumn("Id Pago");
+			col6Entradas.setMaxWidth(60);
+			col6Entradas.setCellRenderer(centrarCell());
+			TableColumn col7Entradas = tableEntradas.getColumn("Fila");
+			col7Entradas.setMaxWidth(45);
+			col7Entradas.setCellRenderer(centrarCell());
+			TableColumn col8Entradas = tableEntradas.getColumn("Columna");
+			col8Entradas.setMaxWidth(70);
+			col8Entradas.setCellRenderer(centrarCell());
+			TableColumn col9Entradas = tableEntradas.getColumn("Suplemento");
+			col9Entradas.setMaxWidth(90);
+			col9Entradas.setCellRenderer(centrarCell());
+			TableColumn col10Entradas = tableEntradas.getColumn("Precio");
+			col10Entradas.setMaxWidth(50);
+			col10Entradas.setCellRenderer(centrarCell());
+			
+			tableEntradas .setPreferredScrollableViewportSize(new Dimension(500, 200));
+			scrollPaneTableEntradas = new JScrollPane(tableEntradas );
+			scrollPaneTableEntradas.setBounds(33, 77, 592, 408);
 			 
 			 
 			 panelEntradas.add(scrollPaneTableEntradas );
 			 
 			 
-			 
-			 /*
-			 //cargamos datos
-			 for(int i=0; i<18; i++){
-				 
-				 datosSala.add(new Sala(1, 50, 60, "C3", "C5"));
-				 
-				 
-			 }
-			 
-			
-			 for(int i=0; i<datosSala.size(); i++){
-				 
-				 Object [] fila = new Object[5];
-				 
-				 fila[0] = datosSala.get(i).getIdSala();
-				 fila[1] = datosSala.get(i).getFilas();
-				 fila[2] = datosSala.get(i).getColumnas();
-				 fila[3] = datosSala.get(i).getAudio();
-				 fila[4] = datosSala.get(i).getVideo();
-				 
-				 modelo5.addRow ( fila );
-				 
-			 }
-			 
-			 */
 			 tableEntradas .addMouseListener(new MouseAdapter() {
 				 	@Override
 				 	public void mouseClicked(MouseEvent arg0) {
 				 		
 				 		
 				 		
+				 		System.out.println(tableEntradas .rowAtPoint(arg0.getPoint()));			 		
 				 		
 				 		
 				 	}});
@@ -2095,7 +2231,11 @@ public class VAdministrador extends JFrame {
 
 
 	private void datosTablaSesiones(JPanel panelSesiones, BBDD bd, Sesion sesiones) {
+		
 		modelo3 = new DefaultTableModel();
+		for(int i = (modelo3.getRowCount()-1); i>=0;i--){
+			modelo3.removeRow(i);
+			} 
 		 tableSesiones = new JTable(modelo3/*data1, columnNames*/);
 		
 		 modelo3.addColumn("IDSesion");
@@ -2158,8 +2298,8 @@ public class VAdministrador extends JFrame {
 			 	@Override
 			 	public void mouseClicked(MouseEvent arg0) {
 			 					 		
-			 		idUsed_sesion =Integer.parseInt(String.valueOf(modelo3.getValueAt(tableSesiones.rowAtPoint(arg0.getPoint()), 0)));
-				
+			 		
+			 		idUsed_sesion = Integer.parseInt(String.valueOf(modelo3.getValueAt(tableSesiones.rowAtPoint(arg0.getPoint()), 0)));
 			 	}});
 	}
 

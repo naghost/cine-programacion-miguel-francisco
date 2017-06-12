@@ -152,9 +152,10 @@ public class Sesion {
 			int respuesta = JOptionPane.showConfirmDialog(null,"¿Estas seguro que quieres borrar el siguiente elemento? \n"+camp[0]+" "+camp[1]+" "+camp[2]+" "+camp[3],"Eliminar sesion",JOptionPane.YES_NO_OPTION);
 
 			if(respuesta == 0){
+				System.out.println(id);
 				stmt = bd.conexion.createStatement();
-				stmt.execute("DELETE FROM sesiones WHERE IDPrecio="+id);
-				stmt.close();
+				stmt.execute("DELETE FROM sesiones WHERE IDSesion ="+id);
+				
 				JOptionPane.showMessageDialog(null, "Los cambios se han realizado");
 			}else{
 				JOptionPane.showMessageDialog(null, "No se han realizado los cambios");
