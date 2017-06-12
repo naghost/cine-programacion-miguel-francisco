@@ -79,7 +79,7 @@ public class V3Taquillero extends JFrame {
 		}
 		
 		
-		//fechaSQL=ce.camFormat3(hora.substring(6,16));
+		fechaSQL=ce.camFormat3(hora.substring(6,16));
 		int dia = Integer.parseInt(hora.substring(6,8));
 		int mes = Integer.parseInt(hora.substring(9,11));
 		int ano = Integer.parseInt(hora.substring(12,16));
@@ -182,6 +182,7 @@ public class V3Taquillero extends JFrame {
 		consulta="SELECT * FROM `descuentos` WHERE ((FechaInicio<='"+fechaSQL+"' AND FechaFin>='"+fechaSQL+"') OR (Temporal=0)) AND DiaSemana LIKE '%"+diaSemana+"%'";
 		
 		contenido= bd.seleccionar(consulta);
+		
 		
 		try {	
 			
